@@ -19,9 +19,9 @@ class HKStockService:
         self.mysql_utils.insert_batch(sql, df_json)
 
     def insert_or_update_hk_stock_exist(self, symbolstr, count):
-        sql = "replace into hk_stock_list_exist(id, symbolstr, count) values (1, '%s', %s)" % (symbolstr, count)
+        sql = "replace into stock_list_exist(id, symbolstr, count) values (1, '%s', %s)" % (symbolstr, count)
         self.mysql_utils.insert_or_update(sql)
 
     def get_hk_stock_exist(self):
-        sql = "select symbolstr from hk_stock_list_exist where id = 1"
+        sql = "select symbolstr from stock_list_exist where id = 1"
         return self.mysql_utils.select_one(sql)
