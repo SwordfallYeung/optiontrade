@@ -10,7 +10,7 @@ hk_stock_service = HKStockService()
 
 def get_hk_stock_all_daily():
     '''
-    获取所有港股的股票所有历史行情
+    获取每一只港股的股票所有历史行情
     :return:
     '''
     # 获取所有港股代码字符串
