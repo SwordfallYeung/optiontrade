@@ -18,8 +18,8 @@ class MysqlUtils:
             conn = pymysql.connect(host=self.host, port=self.port, user=self.user,
                                    passwd=self.password, db=self.db, charset=self.charset,
                                    cursorclass=pymysql.cursors.DictCursor)
-        except Exception:
-            print("connect database failed")
+        except Exception as ex:
+            print("connect database failed, reason:" + ex)
             conn = False
         return conn
 
@@ -30,8 +30,8 @@ class MysqlUtils:
                     self.cursor.close()
                 if(type(self.conn) == 'object'):
                     self.conn.close()
-            except Exception:
-                print("close database exception")
+            except Exception as ex:
+                print("close database exception, reason:" + ex)
 
     def select_all(self, sql):
         res = ''
@@ -39,9 +39,9 @@ class MysqlUtils:
             try:
                 self.cursor.execute(sql)
                 res = self.cursor.fetchall()
-            except Exception:
+            except Exception as ex:
                 res = False
-                print("query database exception")
+                print("query database exception, reason:" + ex)
             self.close()
         return res
 
@@ -51,9 +51,9 @@ class MysqlUtils:
             try:
                 self.cursor.execute(sql)
                 res = self.cursor.fetchone()
-            except Exception:
+            except Exception as ex:
                 res = False
-                print("query database exception")
+                print("query database exception, reason:" + ex)
             self.close()
         return res
 
@@ -64,10 +64,10 @@ class MysqlUtils:
                 self.cursor.execute(sql)
                 self.conn.commit()
                 flag = True
-            except Exception:
+            except Exception as ex:
                 self.conn.rollback()
                 flag = False
-                print("insert or update database exception")
+                print("insert or update database exception, reason: " + ex)
             self.close()
         return flag
 
@@ -78,10 +78,10 @@ class MysqlUtils:
                 self.cursor.executemany(sql, val)
                 self.conn.commit()
                 flag = True
-            except Exception:
+            except Exception as ex:
                 self.conn.rollback()
                 flag = False
-                print("update database exception")
+                print("update database exception, reason: " + ex)
             self.close()
         return flag
 
@@ -92,9 +92,9 @@ class MysqlUtils:
                 self.cursor.execute(sql)
                 self.conn.commit()
                 flag = True
-            except Exception:
+            except Exception as ex:
                 self.conn.rollback()
                 flag = False
-                print("update database exception")
+                print("update database exception, reason:" + ex)
             self.close()
         return flag
