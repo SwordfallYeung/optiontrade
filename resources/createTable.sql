@@ -32,3 +32,14 @@ create table if not exists hk_stock_daily(
     close float not null,
     volume float not null
     );
+
+create table if not exists us_stock_daily(
+    id int  not null auto_increment  primary key,
+    symbol varchar(8) not null,
+    date date not null,
+    open float not null,
+    high float not null,
+    low float not null,
+    close float not null,
+    volume float not null
+    );

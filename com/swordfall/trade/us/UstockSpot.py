@@ -3,7 +3,6 @@ import pandas as pd
 from com.swordfall.service.us.UStockService import UStockService
 from com.swordfall.utils.CommonUtils import CommonUtils
 
-
 common_utils = CommonUtils()
 us_stock_service = UStockService()
 
@@ -49,14 +48,14 @@ def us_stock_list_exist_update(hk_stock_list_str, type, count):
     :param count:
     :return:
     '''
-    us_stock_service.insert_or_update_us_stock_exist(hk_stock_list_str, type, count)
+    us_stock_service.insert_or_update_us_stock_exist(2, hk_stock_list_str, type, count)
 
 def get_us_stock_exist():
     '''
     更新美股代码字符串
     :return:
     '''
-    stock_exist = us_stock_service.get_us_stock_exist()
+    stock_exist = us_stock_service.get_us_stock_exist(2)
     if stock_exist is None:
         return ""
     if type(stock_exist) is dict:
