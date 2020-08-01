@@ -3,14 +3,14 @@ import time, datetime
 import numpy as np
 from com.swordfall.service.us.UStockService import UStockService
 from com.swordfall.utils.CommonUtils import CommonUtils
-from com.swordfall.trade.us.UstockSpot import get_us_stock_exist
+from com.swordfall.trade.us.UstockList import get_us_stock_exist
 
 common_utils = CommonUtils()
 us_stock_service = UStockService()
 
-def get_us_stock_all_daily():
+def get_us_all_stock_daily():
     '''
-    获取每一只美股的所有历史行情
+    获取每一只美股的所有历史行情，不包含今天
     :return:
     '''
     # 获取所有港股代码字符串
@@ -18,9 +18,9 @@ def get_us_stock_all_daily():
     stock_exist_list = stock_exist.split(',')
 
     #获取历史行情的所有美股代码字符串
-    stock_daily_exist = get_us_stock_daily_exist()
-    us_stock_daily_str = stock_daily_exist
-    us_stock_daily_count = 0
+    all_stock_daily_exist = get_us_all_stock_daily_exist()
+    us_all_stock_daily_str = all_stock_daily_exist
+    us_all_stock_daily_count = 0
 
     for symbol in stock_exist_list:
         # if symbol > '01858' and symbol < '02226':
@@ -28,7 +28,7 @@ def get_us_stock_all_daily():
         #     print(symbol, flag)
 
         #if symbol == 'FFR':
-        if stock_daily_exist.find(symbol) < 0:
+        if all_stock_daily_exist.find(symbol) < 0:
             #print(symbol)
             #根据港股代码获取某一只美股的所有历史行情
             try:
@@ -56,27 +56,27 @@ def get_us_stock_all_daily():
             # print(df_tuple_tuple)
             flag = False
             try:
-                flag = us_stock_service.insert_stock_all_daily_batch(symbol, df_tuple_tuple)
+                flag = us_stock_service.insert_one_stock_all_daily_batch(symbol, df_tuple_tuple)
                 print(symbol, flag)
             except Exception as ex:
                 print("insert_stock_daily_batch exception, reason:", ex)
             if flag is True:
-                us_stock_daily_count += 1
-                us_stock_daily_str += symbol + ","
+                us_all_stock_daily_count += 1
+                us_all_stock_daily_str += symbol + ","
 
     #更新港股历史行情所有港股代码字符串
-    us_stock_daily_exist_update(us_stock_daily_str, 'us_stock_daily', us_stock_daily_count)
+    update_us_stock_daily_exist(us_all_stock_daily_str, 'us_stock_daily', us_all_stock_daily_count)
 
-def us_stock_daily_exist_update(hk_stock_list_str, type, count):
+def update_us_stock_daily_exist(us_stock_list_str, type, count):
     '''
-    更新所有港股股票代码字符串
+    更新所有美股代码字符串
     :param hk_stock_list_str:
     :param count:
     :return:
     '''
-    us_stock_service.insert_or_update_us_stock_exist(4, hk_stock_list_str, type, count)
+    us_stock_service.insert_or_update_us_stock_exist(4, us_stock_list_str, type, count)
 
-def get_us_stock_daily_exist():
+def get_us_all_stock_daily_exist():
     '''
     获取历史行情的所有美股代码字符串
     :return:
@@ -87,9 +87,9 @@ def get_us_stock_daily_exist():
     if type(stock_exist) is dict:
         return stock_exist.get('symbolstr')
 
-def us_all_stock_daily_update():
+def update_us_all_stock_daily_lastest():
     '''
-    获取港股所有股票代码每天的行情，延迟15分钟
+    更新美股所有股票代码每天的行情，延迟15分钟
     :return:
     '''
     current_data_df = ak.stock_us_spot()
@@ -134,12 +134,12 @@ def days_reduce(first_day, second_day):
     delta = first_day - second_day
     return delta.days
 
-def us_all_stock_point_day_update(oneday):
+def update_us_all_stock_point_day(oneday):
     '''
-    获取每一只美股某一天的历史行情
+    更新每一只美股指定的某一天历史行情
     :return:
     '''
-    # 获取所有港股代码字符串
+    # 获取所有美股代码字符串
     stock_exist = get_us_stock_exist()
     stock_exist_list = stock_exist.split(',')
 
@@ -206,8 +206,8 @@ def get_one_us_stock(symbol):
     print(stock_us_daily_df)
 
 if __name__ == '__main__':
-    #get_us_stock_all_daily()
-    us_all_stock_daily_update()
+    #get_us_all_stock_daily()
+    update_us_all_stock_daily_lastest()
 
     # us_time = get_us_today_time()
     # print(us_time)
@@ -223,7 +223,7 @@ if __name__ == '__main__':
     #     print("不正常")
     # print(days)
 
-    #us_all_stock_point_day_update('2020-07-29')
+    #update_us_all_stock_point_day('2020-07-29')
 
     #get_one_us_stock('IGLEU')
 

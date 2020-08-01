@@ -6,7 +6,7 @@ from com.swordfall.utils.CommonUtils import CommonUtils
 common_utils = CommonUtils()
 us_stock_service = UStockService()
 
-def ustock():
+def get_ustock_list():
     '''
     获取所有美股信息
     :return:
@@ -39,9 +39,9 @@ def ustock():
     flag = us_stock_service.insert_batch(df_tuple_tuple)
     #print(flag)
     if flag is True:
-        us_stock_list_exist_update(us_stock_list_str, 'us_stock_list', len(df_list))
+        update_us_stock_list_exist(us_stock_list_str, 'us_stock_list', len(df_list))
 
-def us_stock_list_exist_update(hk_stock_list_str, type, count):
+def update_us_stock_list_exist(hk_stock_list_str, type, count):
     '''
     更新已存在的美股代码字符串
     :param hk_stock_list_str:
@@ -62,6 +62,6 @@ def get_us_stock_exist():
         return stock_exist.get('symbolstr')
 
 if __name__ == '__main__':
-    ustock()
+    get_ustock_list()
     #stock_exist = get_us_stock_exist()
     #print("hello " + stock_exist)

@@ -50,7 +50,7 @@ class UStockService:
         sql = "select symbolstr from stock_list_exist where id = %s" % (id)
         return self.mysql_utils.select_one(sql)
 
-    def insert_stock_all_daily_batch(self, symbol, df_tuple):
+    def insert_one_stock_all_daily_batch(self, symbol, df_tuple):
         '''
         批量插入某一美股代码的所有记录
         :param df_tuple: 元组

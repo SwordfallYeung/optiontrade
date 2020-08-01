@@ -88,7 +88,7 @@ def get_hk_all_stock_daily_exist():
 
 def update_hk_all_stock_daily_lastest():
     '''
-    获取港股所有股票代码当前最新的行情，延迟15分钟
+    更新港股所有股票代码当前最新的行情，延迟15分钟
     :return:
     '''
     current_data_df = ak.stock_hk_spot()
