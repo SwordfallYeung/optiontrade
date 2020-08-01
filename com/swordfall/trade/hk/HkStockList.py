@@ -5,7 +5,7 @@ from com.swordfall.utils.CommonUtils import CommonUtils
 common_utils = CommonUtils()
 hk_stock_service = HKStockService()
 
-def hk_stock_spot():
+def get_hk_all_stock_list():
     '''
     获取所有港股信息
     :return:
@@ -29,10 +29,10 @@ def hk_stock_spot():
     print(df_tuple_tuple)
     flag = hk_stock_service.insert_batch(df_tuple_tuple)
     if flag is True:
-        hk_stock_list_exist_update(hk_stock_list_str, 'hk_stock_list', len(df_list))
+        update_hk_stock_list_exist(hk_stock_list_str, 'hk_stock_list', len(df_list))
 
 
-def hk_stock_list_exist_update(hk_stock_list_str, type, count):
+def update_hk_stock_list_exist(hk_stock_list_str, type, count):
     '''
     更新所有港股股票代码字符串
     :param hk_stock_list_str:
@@ -56,5 +56,5 @@ if __name__ == '__main__':
     #stock_exist = get_hk_stock_exist()
     #print("hello " + stock_exist)
 
-    hk_stock_spot()
+    get_hk_all_stock_list()
     #stock_hk_list_exist()

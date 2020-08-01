@@ -3,14 +3,14 @@ import time, datetime
 import numpy as np
 from com.swordfall.service.hk.HKStockService import HKStockService
 from com.swordfall.utils.CommonUtils import CommonUtils
-from com.swordfall.trade.hk.HkStockSpot import get_hk_stock_exist
+from com.swordfall.trade.hk.HkStockList import get_hk_stock_exist
 
 common_utils = CommonUtils()
 hk_stock_service = HKStockService()
 
-def get_hk_stock_all_daily():
+def get_hk_all_stock_daily():
     '''
-    获取每一只港股的股票所有历史行情
+    获取所有港股的历史行情，不包含今天
     :return:
     '''
     # 获取所有港股代码字符串
@@ -18,9 +18,9 @@ def get_hk_stock_all_daily():
     stock_exist_list = stock_exist.split(',')
 
     #获取港股历史行情所有港股代码字符串
-    stock_daily_exist = get_hk_stock_daily_exist()
-    hk_stock_daily_str = stock_daily_exist
-    hk_stock_daily_count = 0
+    all_stock_daily_exist = get_hk_all_stock_daily_exist()
+    hk_all_stock_daily_str = all_stock_daily_exist
+    hk_all_stock_daily_count = 0
 
     for symbol in stock_exist_list:
         # if symbol > '01858' and symbol < '02226':
@@ -28,18 +28,18 @@ def get_hk_stock_all_daily():
         #     print(symbol, flag)
 
         #if symbol == '00001':
-        if stock_daily_exist.find(symbol) < 0:
+        if all_stock_daily_exist.find(symbol) < 0:
             #print(symbol)
             #根据港股代码获取某一只港股的所有历史行情
             try:
-                stock_hk_daily_hfq_df = ak.stock_hk_daily(symbol=symbol)
-                #print(stock_hk_daily_hfq_df, type(stock_hk_daily_hfq_df))
+                stock_hk_daily_df = ak.stock_hk_daily(symbol=symbol)
+                #print(stock_hk_daily_hfq_df, type(stock_hk_daily_df))
             except Exception as e:
-                stock_hk_daily_hfq_df = None
+                stock_hk_daily_df = None
                 print(" stock_hk_daily_hfq_df exception, reason:", e)
 
-            df_list_list = stock_hk_daily_hfq_df.values.__array__() if stock_hk_daily_hfq_df is not None else []
-            df_date_list = stock_hk_daily_hfq_df.axes[0].array if stock_hk_daily_hfq_df is not None else []
+            df_list_list = stock_hk_daily_df.values.__array__() if stock_hk_daily_df is not None else []
+            df_date_list = stock_hk_daily_df.axes[0].array if stock_hk_daily_df is not None else []
 
             df_list_tuple = []
             for i in range(len(df_list_list)):
@@ -55,18 +55,18 @@ def get_hk_stock_all_daily():
             # print(df_tuple_tuple)
             flag = False
             try:
-                flag = hk_stock_service.insert_stock_all_daily_batch(symbol, df_tuple_tuple)
+                flag = hk_stock_service.insert_one_stock_all_daily_batch(symbol, df_tuple_tuple)
                 print(symbol, flag)
             except Exception as ex:
                 print("insert_stock_daily_batch exception, reason:", ex)
             if flag is True:
-                hk_stock_daily_count += 1
-                hk_stock_daily_str += symbol + ","
+                hk_all_stock_daily_count += 1
+                hk_all_stock_daily_str += symbol + ","
 
     #更新港股历史行情所有港股代码字符串
-    hk_stock_daily_exist_update(hk_stock_daily_str, 'hk_stock_daily', hk_stock_daily_count)
+    update_hk_stock_daily_exist(hk_all_stock_daily_str, 'hk_stock_daily', hk_all_stock_daily_count)
 
-def hk_stock_daily_exist_update(hk_stock_list_str, type, count):
+def update_hk_stock_daily_exist(hk_stock_list_str, type, count):
     '''
     更新所有港股股票代码字符串
     :param hk_stock_list_str:
@@ -75,9 +75,9 @@ def hk_stock_daily_exist_update(hk_stock_list_str, type, count):
     '''
     hk_stock_service.insert_or_update_hk_stock_exist(3, hk_stock_list_str, type, count)
 
-def get_hk_stock_daily_exist():
+def get_hk_all_stock_daily_exist():
     '''
-    获取港股所有股票代码字符串
+    获取港股所有股票历史行情方面的代码字符串
     :return:
     '''
     stock_exist = hk_stock_service.get_hk_stock_exist(3)
@@ -86,9 +86,9 @@ def get_hk_stock_daily_exist():
     if type(stock_exist) is dict:
         return stock_exist.get('symbolstr')
 
-def hk_all_stock_daily_update():
+def update_hk_all_stock_daily_lastest():
     '''
-    获取港股所有股票代码每天的行情，延迟15分钟
+    获取港股所有股票代码当前最新的行情，延迟15分钟
     :return:
     '''
     current_data_df = ak.stock_hk_spot()
@@ -122,5 +122,5 @@ def hk_all_stock_daily_update():
         print("insert_stock_daily_batch exception, reason:", ex)
 
 if __name__ == '__main__':
-    #get_hk_stock_all_daily()
-    hk_all_stock_daily_update()
+    #get_hk_all_stock_daily()
+    update_hk_all_stock_daily_lastest()
