@@ -48,9 +48,9 @@ create table if not exists stock_index_daily(
     id int  not null auto_increment  primary key,
     indexname varchar(30) not null,
     date date not null,
-    open float not null,
-    high float not null,
-    low float not null,
-    close float not null,
+    open float(10,2) not null,
+    high float(10,2) not null,
+    low float(10,2) not null,
+    close float(10,2) not null,
     volume float not null
     );
