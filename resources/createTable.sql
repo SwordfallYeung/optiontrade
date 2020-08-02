@@ -43,3 +43,14 @@ create table if not exists us_stock_daily(
     close float not null,
     volume float not null
     );
+
+create table if not exists stock_index_daily(
+    id int  not null auto_increment  primary key,
+    indexname varchar(30) not null,
+    date date not null,
+    open float not null,
+    high float not null,
+    low float not null,
+    close float not null,
+    volume float not null
+    );
