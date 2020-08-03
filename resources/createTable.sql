@@ -54,3 +54,5 @@ create table if not exists stock_index_daily(
     close float(10,2) not null,
     volume float not null
     );
+
+select date, open, high, low, close from stock_index_daily where index_name = '恒生指数' and date > '2020-07-03' and date < '2020-07-31' order by date desc;
