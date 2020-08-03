@@ -10,6 +10,15 @@ class CommonIndexesDaily:
         self.common_stock_service = CommonStockService()
 
     def get_index_daily(self, country, index_name, start_date, end_date, method_name):
+        '''
+        获取指数一段时间内每天的行情
+        :param country: 地区或者国家
+        :param index_name: 指数名称
+        :param start_date: 开始时间
+        :param end_date: 结束时间
+        :param method_name: 方法名称
+        :return:
+        '''
         try:
             index_daily_df = ak.index_investing_global(country=country, index_name=index_name, period="每日",
                                                    start_date=start_date, end_date=end_date)
@@ -42,15 +51,30 @@ class CommonIndexesDaily:
                 print(method_name + " exception, reason:", ex)
 
     def get_china_today_time(self):
+        '''
+        获取中国区时间
+        :return:
+        '''
         china_time = datetime.datetime.now().date()
         return china_time
 
     def get_us_today_time(self):
+        '''
+        获取美国区时间
+        :return:
+        '''
         china_time = datetime.datetime.now()
         us_time = (china_time - datetime.timedelta(hours=12)).date()
         return us_time
 
     def update_index_daily_lastest(self, country, index_name, method_name):
+        '''
+        获取指数最新行情
+        :param country: 国家或者地区
+        :param index_name: 指数名称
+        :param method_name: 方法名称
+        :return:
+        '''
         if country == "美国":
             time_now = self.get_us_today_time()
             #print("美国", time_now)
