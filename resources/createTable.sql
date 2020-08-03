@@ -46,7 +46,7 @@ create table if not exists us_stock_daily(
 
 create table if not exists stock_index_daily(
     id int  not null auto_increment  primary key,
-    indexname varchar(30) not null,
+    index_name varchar(30) not null,
     date date not null,
     open float(10,2) not null,
     high float(10,2) not null,

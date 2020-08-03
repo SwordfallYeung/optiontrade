@@ -7,12 +7,22 @@ class CommonStockService:
     def __init__(self):
         self.mysql_utils = MysqlUtils()
 
-    def insert_index_daily_batch(self, indexname, df_tuple):
+    def insert_index_daily_batch(self, index_name, df_tuple):
         '''
         批量插入某一股票代码的所有记录
         :param df_tuple: 元组
         :return:
         '''
-        sql =  "replace into stock_index_daily(indexname, date, open, high, low, close, volume) \
-                       values ('"+ indexname + "', %s, %s, %s, %s, %s, %s)"
+        sql =  "replace into stock_index_daily(index_name, date, open, high, low, close, volume) \
+                       values ('"+ index_name + "', %s, %s, %s, %s, %s, %s)"
         return self.mysql_utils.insert_batch(sql, df_tuple)
+
+    def select_batch(self, index_name, start_date, end_date):
+        '''
+        获取某一指数一段时间内的每天行情
+        :param index_name: 指数名称
+        :param start_date: 开始时间
+        :param end_date: 结束时间
+        :return:
+        '''
+        sql = "select "
