@@ -77,13 +77,3 @@ class HKStockService:
         '''
         sql =  "SELECT count(*) FROM `option_trade`.`hk_stock_daily` WHERE `symbol` = %s AND `date` = '2020-07-20'" % (symbol)
         return self.mysql_utils.select_one(sql)
-
-    def insert_index_daily_batch(self, indexname, df_tuple):
-        '''
-        批量插入某一港股代码的所有记录
-        :param df_tuple: 元组
-        :return:
-        '''
-        sql =  "replace into stock_index_daily(indexname, date, open, high, low, close, volume) \
-                       values ('"+ indexname + "', %s, %s, %s, %s, %s, %s)"
-        return self.mysql_utils.insert_batch(sql, df_tuple)
