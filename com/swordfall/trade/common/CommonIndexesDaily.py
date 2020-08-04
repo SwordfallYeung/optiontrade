@@ -2,12 +2,13 @@ import akshare as ak
 import time, datetime
 import numpy as np
 from com.swordfall.service.common.CommonStockService import CommonStockService
-
+from com.swordfall.utils.CommonUtils import CommonUtils
 
 class CommonIndexesDaily:
 
     def __init__(self):
         self.common_stock_service = CommonStockService()
+        self.commonUtils = CommonUtils()
 
     def get_index_daily(self, country, index_name, start_date, end_date, method_name):
         '''
@@ -50,23 +51,6 @@ class CommonIndexesDaily:
             except Exception as ex:
                 print(method_name + " exception, reason:", ex)
 
-    def get_china_today_time(self):
-        '''
-        获取中国区时间
-        :return:
-        '''
-        china_time = datetime.datetime.now().date()
-        return china_time
-
-    def get_us_today_time(self):
-        '''
-        获取美国区时间
-        :return:
-        '''
-        china_time = datetime.datetime.now()
-        us_time = (china_time - datetime.timedelta(hours=12)).date()
-        return us_time
-
     def update_index_daily_lastest(self, country, index_name, method_name):
         '''
         获取指数最新行情
@@ -76,9 +60,9 @@ class CommonIndexesDaily:
         :return:
         '''
         if country == "美国":
-            time_now = self.get_us_today_time()
+            time_now = self.commonUtils.get_us_today_time()
             #print("美国", time_now)
         elif country == "香港":
-            time_now = self.get_china_today_time()
+            time_now = self.commonUtils.get_china_today_time()
             #print("香港", time_now)
         self.get_index_daily(country=country, index_name=index_name, start_date=str(time_now), end_date=str(time_now), method_name=method_name)

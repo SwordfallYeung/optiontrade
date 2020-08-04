@@ -26,6 +26,6 @@ class CommonStockService:
         :return:
         '''
         sql = "select date, open, high, low, close from stock_index_daily where " \
-              "index_name = '%s' and date > '%s' and date < '%s'  " \
-              "order by date desc" % (index_name, start_date, end_date)
+              "index_name = '%s' and date >= '%s' and date <= '%s'  " \
+              "order by date asc" % (index_name, start_date, end_date)
         return self.mysql_utils.select_all(sql)
