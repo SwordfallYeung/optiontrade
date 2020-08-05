@@ -63,6 +63,6 @@ class CommonIndexesDaily:
             time_now = self.commonUtils.get_us_today_time()
             #print("美国", time_now)
         elif country == "香港":
-            time_now = self.commonUtils.get_china_today_time()
+            time_now = self.commonUtils.get_china_hk_today_time()
             #print("香港", time_now)
         self.get_index_daily(country=country, index_name=index_name, start_date=str(time_now), end_date=str(time_now), method_name=method_name)
