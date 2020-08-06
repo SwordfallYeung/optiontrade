@@ -37,10 +37,10 @@ class CommonUtils:
 
         hour = now_time.hour
         min = now_time.minute
-        if hour < 9 or (hour > 9 and min < 30):
+        if hour < 9 or (hour == 9 and min < 30):
             now_time = (now_time - datetime.timedelta(hours=24)).date()
             return now_time
-        if hour > 9 and min >= 30:
+        if (hour == 9 and min >= 30) or hour > 9:
             china_time = now_time.date()
             return china_time
 

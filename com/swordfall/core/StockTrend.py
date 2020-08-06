@@ -7,7 +7,7 @@ class StockTrend:
         self.commonStockService = CommonStockService()
 
     def index_up_trend(self, index_name):
-        index_daily = self.commonStockService.select_batch("恒生指数", "2020-07-01", "2020-08-05")
+        index_daily = self.commonStockService.select_batch("恒生指数", "2020-07-01", "2020-08-06")
         self.simple_judge(index_daily)
         print("---------------------------------------")
         self.average_judge(index_daily)
