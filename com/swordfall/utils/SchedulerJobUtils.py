@@ -2,7 +2,7 @@
 from datetime import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-class SchedulerJob:
+class SchedulerJobUtils:
 
 
     def test_job(self):
@@ -19,5 +19,5 @@ class SchedulerJob:
         scheduler.start()
 
 if __name__ == '__main__':
-    sj = SchedulerJob()
+    sj = SchedulerJobUtils()
     sj.interval_scheduler(sj.test_job)

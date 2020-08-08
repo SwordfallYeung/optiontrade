@@ -1,9 +1,11 @@
 from com.swordfall.service.common.CommonStockService import CommonStockService
+from com.swordfall.utils.CommonUtils import CommonUtils
 
 class BaseTrend:
 
     def __init__(self):
         self.commonStockService = CommonStockService()
+        self.commonUtils = CommonUtils()
 
     def simple_judge(self, index_daily):
         '''

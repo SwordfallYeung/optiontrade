@@ -1,6 +1,6 @@
 import pandas as pd
 import json
-from datetime import datetime
+from datetime import datetime,timedelta
 
 class CommonUtils:
 
@@ -28,17 +28,17 @@ class CommonUtils:
         now_time = datetime.now()
         is_weekday = now_time.weekday()
         if is_weekday == 5:
-            now_time = (now_time - datetime.timedelta(hours=24)).date()
+            now_time = (now_time - timedelta(hours=24)).date()
             return now_time
 
         if is_weekday == 6:
-            now_time = (now_time - datetime.timedelta(hours=48)).date()
+            now_time = (now_time - timedelta(hours=48)).date()
             return now_time
 
         hour = now_time.hour
         min = now_time.minute
         if hour < 9 or (hour == 9 and min < 30):
-            now_time = (now_time - datetime.timedelta(hours=24)).date()
+            now_time = (now_time - timedelta(hours=24)).date()
             return now_time
         if (hour == 9 and min >= 30) or hour > 9:
             china_time = now_time.date()
@@ -50,11 +50,25 @@ class CommonUtils:
         :return:
         '''
         china_time = datetime.now()
-        us_time = (china_time - datetime.timedelta(hours=12)).date()
+        us_time = (china_time - timedelta(hours=12)).date()
         return us_time
+
+    def get_month_ago_date(self):
+        '''
+        获取前一个月的date 2020-08-09
+        :return:
+        '''
+        china_time = datetime.now()
+        month_ago_time = (china_time - timedelta(days=31)).date()
+        return month_ago_time
 
 if __name__ == '__main__':
     st = CommonUtils()
     # date = st.get_china_hk_today_time()
     # print(date)
+
+    date = st.get_china_today_time()
+    date2 = st.get_month_ago_date()
+
+    print("date", date, ",", "date2", date2)
 
