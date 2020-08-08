@@ -1,6 +1,6 @@
 import pandas as pd
 import json
-import datetime
+from datetime import datetime
 
 class CommonUtils:
 
@@ -17,7 +17,7 @@ class CommonUtils:
         获取中国区时间
         :return:
         '''
-        china_time = datetime.datetime.now().date()
+        china_time = datetime.now().date()
         return china_time
 
     def get_china_hk_today_time(self):
@@ -25,7 +25,7 @@ class CommonUtils:
         获取中国区香港时间
         :return:
         '''
-        now_time = datetime.datetime.now()
+        now_time = datetime.now()
         is_weekday = now_time.weekday()
         if is_weekday == 5:
             now_time = (now_time - datetime.timedelta(hours=24)).date()
@@ -49,11 +49,12 @@ class CommonUtils:
         获取美国区时间
         :return:
         '''
-        china_time = datetime.datetime.now()
+        china_time = datetime.now()
         us_time = (china_time - datetime.timedelta(hours=12)).date()
         return us_time
 
 if __name__ == '__main__':
     st = CommonUtils()
-    date = st.get_china_hk_today_time()
-    print(date)
+    # date = st.get_china_hk_today_time()
+    # print(date)
+
