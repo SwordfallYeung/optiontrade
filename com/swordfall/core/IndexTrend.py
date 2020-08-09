@@ -6,7 +6,7 @@ class IndexTrend(BaseTrend):
     def index_trend(self, index_name):
         now_date = str(self.commonUtils.get_china_today_time())
         month_ago_date = str(self.commonUtils.get_month_ago_date())
-        index_daily = self.commonStockService.select_batch(index_name, month_ago_date, now_date)
+        index_daily = self.commonStockService.select_index_batch(index_name, month_ago_date, now_date)
         self.simple_judge(index_daily)
         print("---------------------------------------")
         #self.average_judge(index_daily)
