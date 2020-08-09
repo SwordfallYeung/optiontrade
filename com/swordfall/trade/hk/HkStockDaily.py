@@ -21,7 +21,7 @@ class HkStockDaily(CommonBaseDaily):
         print("start_time", start_time)
 
         # 获取所有港股代码字符串
-        stock_exist = self.hk_stock_service.get_hk_stock_exist()
+        stock_exist = self.hk_stock_service.get_hk_stock_exist(id=1)
         stock_exist_list = stock_exist.split(',')
 
         # 获取港股历史行情所有港股代码字符串
