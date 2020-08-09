@@ -1,5 +1,5 @@
 import akshare as ak
-import time, datetime
+from datetime import datetime
 import numpy as np
 from com.swordfall.service.us.UStockService import UStockService
 from com.swordfall.utils.CommonUtils import CommonUtils
@@ -16,6 +16,9 @@ class UstockDaily(CommonBaseDaily):
         获取每一只美股的所有历史行情，不包含今天
         :return:
         '''
+        start_time = datetime.now()
+        print("start_time", start_time)
+
         # 获取所有美股代码字符串
         stock_exist = self.get_us_stock_exist()
         stock_exist_list = stock_exist.split(',')
@@ -48,7 +51,7 @@ class UstockDaily(CommonBaseDaily):
                 for i in range(len(df_list_list)):
                     lt = df_list_list[i]
                     # print(tuple(lt))
-                    date = datetime.datetime.date(df_date_list[i])
+                    date = datetime.date(df_date_list[i])
                     # print(bool(np.isnan(lt[0])))
                     # print(type(np.isnan(lt[0])))
                     if np.isnan(lt[0]) == False:
@@ -70,6 +73,11 @@ class UstockDaily(CommonBaseDaily):
 
         # 更新港股历史行情所有港股代码字符串
         self.update_us_stock_daily_exist(us_all_stock_daily_str, 'us_stock_daily', us_all_stock_daily_count)
+
+        end_time = datetime.now()
+        print("end_time", end_time)
+        time = (end_time - start_time)
+        print("耗时", time)
 
     def update_us_stock_daily_exist(self, us_stock_list_str, type, count):
         '''
@@ -96,6 +104,9 @@ class UstockDaily(CommonBaseDaily):
         更新美股所有股票代码每天的行情，延迟15分钟
         :return:
         '''
+        start_time = datetime.now()
+        print("start_time", start_time)
+
         current_data_df = ak.stock_us_spot()
         df_list = self.common_utils.dataframe_to_dict(current_data_df)['data']
 
@@ -126,6 +137,11 @@ class UstockDaily(CommonBaseDaily):
         except Exception as ex:
             print("insert_stock_daily_batch exception, reason:", ex)
 
+        end_time = datetime.now()
+        print("end_time", end_time)
+        time = (end_time - start_time)
+        print("耗时", time)
+
     def get_us_stock_exist(self):
         '''
         更新美股代码字符串
@@ -142,12 +158,13 @@ class UstockDaily(CommonBaseDaily):
         更新每一只美股指定的某一天历史行情
         :return:
         '''
+        start_time = datetime.now()
+        print("start_time", start_time)
+
         # 获取所有美股代码字符串
         stock_exist = self.get_us_stock_exist()
         stock_exist_list = stock_exist.split(',')
 
-        start_time = datetime.datetime.now()
-        print("start_time", start_time)
         df_list_tuple = []
         i = 0
         for symbol in stock_exist_list:
@@ -168,7 +185,7 @@ class UstockDaily(CommonBaseDaily):
                 for oneday in oneday_list:
                     # print('df_date_list', tuple(df_date_list))
                     # print('count', count)
-                    last_date = datetime.datetime.date(df_date_list[count - 1])
+                    last_date = datetime.date(df_date_list[count - 1])
                     # print('last_date', last_date)
                     onedate = self.exchange_oneday_to_date(oneday)
                     # print('onedate', onedate)
@@ -200,7 +217,8 @@ class UstockDaily(CommonBaseDaily):
             print(oneday, flag, i)
         except Exception as ex:
             print("us_all_stock_point_day_update exception, reason:", ex)
-        end_time = datetime.datetime.now()
+
+        end_time = datetime.now()
         print("end_time", end_time)
         time = (end_time - start_time)
         print("耗时", time)
@@ -234,9 +252,9 @@ if __name__ == '__main__':
 
     #get_one_us_stock('IGLEU')
 
-    # start_time = datetime.datetime.now()
+    # start_time = datetime.now()
     # time.sleep(2)
-    # end_time = datetime.datetime.now()
+    # end_time = datetime.now()
     # time = (end_time - start_time)
     # print("耗时", time, "s")
 
