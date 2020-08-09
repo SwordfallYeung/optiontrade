@@ -38,7 +38,7 @@ class CommonStockService:
         :param end_date: 结束时间
         :return:
         '''
-        sql = "select date, open, high, low, close from hk_stock_daily where " \
+        sql = "select date, open, high, low, close from " + db + " where " \
               "symbol = '%s' and date >= '%s' and date <= '%s'  " \
-              "order by date asc" % ( symbol_name, start_date, end_date)
+              "order by date asc" % (symbol_name, start_date, end_date)
         return self.mysql_utils.select_all(sql)
