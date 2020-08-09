@@ -99,10 +99,11 @@ class BaseTrend:
                 if status is 'up':
                     calculate_status['count'] = calculate_status['count'] + 1
             if close < open:
-
                 if status is not 'down':
                     calculate_status['status'] = 'down'
                     calculate_status['count'] = 1
                 if status is 'down':
                     calculate_status['count'] = calculate_status['count'] + 1
-        print(calculate_status)
+
+        if calculate_status['status'] is 'up' and calculate_status['count'] >= 2:
+            print(calculate_status)

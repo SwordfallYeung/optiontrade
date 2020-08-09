@@ -7,6 +7,8 @@ from com.swordfall.trade.us.UsIndexesDaily import UsIndexesDaily
 from com.swordfall.trade.us.UstockList import UstockList
 from com.swordfall.trade.us.UstockDaily import UstockDaily
 
+from com.swordfall.core.StockTrend import StockTrend
+
 class SchedulerJobs:
 
     def __init__(self):
@@ -18,6 +20,8 @@ class SchedulerJobs:
         self.usIndexesDaily = UsIndexesDaily()
         self.ustockList = UstockList()
         self.ustockDaily = UstockDaily()
+
+        self.stockTrend = StockTrend()
 
     def add_hk_job(self):
         print("SchedulerJobs update_hk_hang_seng_index_daily_lastest 每天更新恒生指数行情")
@@ -36,10 +40,12 @@ class SchedulerJobs:
         self.schedulerUtils.timer_scheduler(job=self.ustockDaily.update_us_all_stock_daily_lastest(), day_of_week='1-6', hour=4, minute=35)
 
     def add_hk_stock_up_job(self):
-        print("SchedulerJobs ")
+        print("SchedulerJobs all_stock_trend 计算所有港股上升趋势的个数")
+        self.stockTrend.all_stock_trend()
 
 if __name__ == "main":
     sj = SchedulerJobs()
     sj.add_hk_job()
     sj.add_us_job()
+    sj.add_hk_stock_up_job()
     sj.schedulerUtils.start()
