@@ -16,8 +16,8 @@ class UstockDaily(CommonBaseDaily):
         获取每一只美股的所有历史行情，不包含今天
         :return:
         '''
-        # 获取所有港股代码字符串
-        stock_exist = get_us_stock_exist()
+        # 获取所有美股代码字符串
+        stock_exist = self.get_us_stock_exist()
         stock_exist_list = stock_exist.split(',')
 
         # 获取历史行情的所有美股代码字符串
