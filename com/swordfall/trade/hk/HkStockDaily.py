@@ -3,7 +3,6 @@ from datetime import time, datetime
 import numpy as np
 from com.swordfall.service.hk.HKStockService import HKStockService
 from com.swordfall.utils.CommonUtils import CommonUtils
-from com.swordfall.trade.hk.HkStockList import HkStockList
 from com.swordfall.trade.common.CommonBaseDaily import CommonBaseDaily
 
 class HkStockDaily(CommonBaseDaily):
