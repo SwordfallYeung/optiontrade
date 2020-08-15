@@ -14,11 +14,12 @@ class HkStockList:
         获取所有港股信息
         :return:
         '''
+        print("SchedulerJobs get_hk_all_stock_list_daily 每天更新港股列表 start")
         start_time = datetime.now()
         print("start_time", start_time)
 
         current_data_df = ak.stock_hk_spot()
-        # print(current_data_df)
+        #print(current_data_df)
 
         df_list = self.common_utils.dataframe_to_dict(current_data_df)['data']
 
@@ -42,6 +43,7 @@ class HkStockList:
         print("end_time", end_time)
         time = (end_time - start_time)
         print("耗时", time)
+        print("SchedulerJobs get_hk_all_stock_list_daily 每天更新港股列表 end")
 
     def update_hk_stock_list_exist(self, hk_stock_list_str, type, count):
         '''
@@ -67,5 +69,5 @@ if __name__ == '__main__':
     #stock_exist = get_hk_stock_exist()
     #print("hello " + stock_exist)
     hsl = HkStockList()
-    hsl.get_hk_all_stock_list()
+    hsl.get_hk_all_stock_list_daily()
     #stock_hk_list_exist()

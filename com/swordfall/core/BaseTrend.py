@@ -81,9 +81,10 @@ class BaseTrend:
         :param index_daily:
         :return:
         '''
-        print("calculate_nearby_daily_status test:")
+        #print("calculate_nearby_daily_status test:")
 
         calculate_status = {'status':'', 'count':0}
+        close = 0
         for index in index_daily:
             date = index['date']
             open = index['open']
@@ -105,5 +106,7 @@ class BaseTrend:
                 if status is 'down':
                     calculate_status['count'] = calculate_status['count'] + 1
 
-        if calculate_status['status'] is 'up' and calculate_status['count'] >= 2:
-            print(calculate_status)
+
+        if close > 2:
+            if calculate_status['status'] is 'up' and calculate_status['count'] >= 2 and calculate_status['count'] < 6:
+                return calculate_status

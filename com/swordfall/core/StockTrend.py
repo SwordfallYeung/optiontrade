@@ -23,20 +23,23 @@ class StockTrend(BaseTrend):
         month_ago_date = str(self.commonUtils.get_month_ago_date())
         stock_daily = self.commonStockService.select_stock_batch("hk_stock_daily", stock_name, month_ago_date, now_date)
         #self.simple_judge(stock_daily)
-        print("---------------stock_name: " + stock_name +"------------------------")
+        #print("---------------stock_name: " + stock_name +"------------------------")
         #self.average_judge(index_daily)
 
         #self.mixing_judge(stock_daily)
 
-        self.calculate_nearby_daily_status(stock_daily)
+        return self.calculate_nearby_daily_status(stock_daily)
 
     def all_stock_trend(self):
         # 获取所有港股代码字符串
-        stock_exist = self.get_us_stock_exist()
+        stock_exist = self.get_hk_stock_exist()
         stock_exist_list = stock_exist.split(',')
 
         for symbol in stock_exist_list:
-            self.stock_trend(symbol)
+            calculate_status = self.stock_trend(symbol)
+            if bool(calculate_status):
+                stock_name = self.hk_stock_service.get_hk_stock_by_symbol(symbol)
+                print('symbol', symbol, 'calculate_status', calculate_status, stock_name)
 
 
 if __name__ == '__main__':

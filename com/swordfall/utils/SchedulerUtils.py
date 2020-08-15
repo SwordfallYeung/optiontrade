@@ -1,10 +1,12 @@
 
 from datetime import datetime
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.blocking  import BlockingScheduler
 
 class SchedulerUtils:
 
     def __init__(self):
+        #job_defaults = {'max_instances': 20}
+        #self.scheduler = BackgroundScheduler(timezone='Asia/Hong_Kong', job_defaults=job_defaults)
         self.scheduler = BlockingScheduler()
 
 
@@ -20,7 +22,7 @@ class SchedulerUtils:
             self.scheduler.add_job(func=job, trigger='interval', seconds=interval, id=id_str)
 
     def timer_scheduler(self, job, day_of_week, hour, minute):
-        id_str = day_of_week + "_" + hour + "_" + minute + "_" + self.random_time()
+        id_str = day_of_week + "_" + str(hour) + "_" + str(minute) + "_" + str(self.random_time())
         self.scheduler.add_job(func=job, trigger='cron', day_of_week=day_of_week, hour=hour, minute=minute, id=id_str)
 
     def start(self):

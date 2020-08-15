@@ -103,6 +103,7 @@ class HkStockDaily(CommonBaseDaily):
         更新港股所有股票代码当前最新的行情，延迟15分钟
         :return:
         '''
+        print("SchedulerJobs update_hk_all_stock_daily_lastest 更新所有港股今天行情 start")
         start_time = datetime.now()
         print("start_time", start_time)
 
@@ -141,6 +142,7 @@ class HkStockDaily(CommonBaseDaily):
         print("end_time", end_time)
         time = (end_time - start_time)
         print("耗时", time)
+        print("SchedulerJobs update_hk_all_stock_daily_lastest 更新所有港股今天行情 end")
 
     def get_hk_stock_exist(self):
         '''
@@ -168,55 +170,56 @@ class HkStockDaily(CommonBaseDaily):
         df_list_tuple = []
         i = 0
         for symbol in stock_exist_list:
-            try:
-                stock_hk_daily_df = ak.stock_hk_daily(symbol=symbol)
-                # print(stock_us_daily_df, type(stock_us_daily_df))
-            except Exception as e:
-                stock_hk_daily_df = None
-                print(" stock_us_daily_df exception, reason:", e)
+            #if symbol == '09969':
+                try:
+                    stock_hk_daily_df = ak.stock_hk_daily(symbol=symbol)
+                    print(stock_hk_daily_df, type(stock_hk_daily_df))
+                except Exception as e:
+                    stock_hk_daily_df = None
+                    print(" stock_us_daily_df exception, reason:", e)
 
-            df_list_list = stock_hk_daily_df.values.__array__() if stock_hk_daily_df is not None else []
-            df_date_list = stock_hk_daily_df.axes[0].array if stock_hk_daily_df is not None else []
+                df_list_list = stock_hk_daily_df.values.__array__() if stock_hk_daily_df is not None else []
+                df_date_list = stock_hk_daily_df.axes[0].array if stock_hk_daily_df is not None else []
 
-            count = len(df_date_list)
+                count = len(df_date_list)
 
-            if count > 0:
-                oneday_list = oneday_str.split(',')
-                for oneday in oneday_list:
-                    # print('df_date_list', tuple(df_date_list))
-                    # print('count', count)
-                    last_date = datetime.date(df_date_list[count - 1])
-                    # print('last_date', last_date)
-                    onedate = self.exchange_oneday_to_date(oneday)
-                    # print('onedate', onedate)
-                    days = self.days_reduce(last_date, onedate)
-                    if days >= 0:
-                        onedate_index = count - 1 - days
-                        # print('onedate_index', onedate_index)
-                        ondedate_lt = df_list_list[onedate_index]
-                        # print('ondedate_lt', tuple(ondedate_lt))
+                if count > 0:
+                    oneday_list = oneday_str.split(',')
+                    for oneday in oneday_list:
+                        # print('df_date_list', tuple(df_date_list))
+                        # print('count', count)
+                        last_date = datetime.date(df_date_list[count - 1])
+                        # print('last_date', last_date)
+                        onedate = self.exchange_oneday_to_date(oneday)
+                        # print('onedate', onedate)
+                        days = self.days_reduce(last_date, onedate)
+                        if days >= 0:
+                            onedate_index = count - 1 - days
+                            # print('onedate_index', onedate_index)
+                            ondedate_lt = df_list_list[onedate_index]
+                            # print('ondedate_lt', tuple(ondedate_lt))
 
-                        df_list_tuple.append(
-                            (symbol, onedate, float(ondedate_lt[0]), float(ondedate_lt[1]), float(ondedate_lt[2]),
-                             float(ondedate_lt[3]), float(ondedate_lt[4])))
-                        print(symbol, onedate, float(ondedate_lt[0]), float(ondedate_lt[1]), float(ondedate_lt[2]),
-                              float(ondedate_lt[3]), float(ondedate_lt[4]))
-                        i += 1
-                        if i % 500 == 0:
-                            df_tuple_tuple = tuple(df_list_tuple)
-                            flag = False
-                            try:
-                                flag = self.hk_stock_service.insert_all_stock_daily_batch(df_tuple_tuple)
-                                df_list_tuple = []
-                                print(oneday, flag, i)
-                            except Exception as ex:
-                                print("update_hk_all_stock_point_day exception, reason:", ex)
+                            df_list_tuple.append(
+                                (symbol, onedate, float(ondedate_lt[0]), float(ondedate_lt[1]), float(ondedate_lt[2]),
+                                 float(ondedate_lt[3]), float(ondedate_lt[4])))
+                            print(symbol, onedate, float(ondedate_lt[0]), float(ondedate_lt[1]), float(ondedate_lt[2]),
+                                  float(ondedate_lt[3]), float(ondedate_lt[4]))
+                            i += 1
+                            if i % 500 == 0:
+                                df_tuple_tuple = tuple(df_list_tuple)
+                                flag = False
+                                try:
+                                    flag = self.hk_stock_service.insert_all_stock_daily_batch(df_tuple_tuple)
+                                    df_list_tuple = []
+                                    print(oneday_str, flag, i)
+                                except Exception as ex:
+                                    print("update_hk_all_stock_point_day exception, reason:", ex)
 
         df_tuple_tuple = tuple(df_list_tuple)
         flag = False
         try:
             flag = self.hk_stock_service.insert_all_stock_daily_batch(df_tuple_tuple)
-            print(oneday, flag, i)
+            print(oneday_str, flag, i)
         except Exception as ex:
             print("update_hk_all_stock_point_day exception, reason:", ex)
         end_time = datetime.now()

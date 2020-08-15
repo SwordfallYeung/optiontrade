@@ -20,9 +20,12 @@ class HangSengIndexesDaily:
         更新港股恒生指数最新行情
         :return:
         '''
+        print("SchedulerJobs update_hk_hang_seng_index_daily_lastest 每天更新恒生指数行情 start")
+
         self.common_indexes_daily.update_index_daily_lastest(country="香港", index_name="恒生指数",
                                                         method_name="update_hk_hang_seng_index_daily_lastest")
 
+        print("SchedulerJobs update_hk_hang_seng_index_daily_lastest 每天更新恒生指数行情 end")
 
 if __name__ == '__main__':
     #get_hk_hang_seng_index_daily("2020-08-02","2020-08-02")

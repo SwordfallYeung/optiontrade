@@ -49,6 +49,14 @@ class HKStockService:
         sql = "select symbolstr from stock_list_exist where id = %s" % (id)
         return self.mysql_utils.select_one(sql)
 
+    def get_hk_stock_by_symbol(self, symbol):
+        '''
+        获取港股所有代码字符串
+        :return:
+        '''
+        sql = "select name from hk_stock_list where symbol = %s" % (symbol)
+        return self.mysql_utils.select_one(sql)
+
     def insert_one_stock_all_daily_batch(self, symbol, df_tuple):
         '''
         批量插入某一港股代码的所有记录
