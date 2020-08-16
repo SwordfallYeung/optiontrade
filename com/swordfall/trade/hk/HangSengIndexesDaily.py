@@ -1,5 +1,5 @@
 from com.swordfall.trade.common.CommonIndexesDaily import CommonIndexesDaily
-import datetime
+from datetime import datetime
 
 class HangSengIndexesDaily:
 

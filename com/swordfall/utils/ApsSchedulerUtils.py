@@ -2,7 +2,7 @@
 from datetime import datetime
 from apscheduler.schedulers.blocking  import BlockingScheduler
 
-class SchedulerUtils:
+class ApsSchedulerUtils:
 
     def __init__(self):
         #job_defaults = {'max_instances': 20}

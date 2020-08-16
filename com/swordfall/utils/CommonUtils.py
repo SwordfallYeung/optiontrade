@@ -44,6 +44,25 @@ class CommonUtils:
             china_time = now_time.date()
             return china_time
 
+    def get_china_hk_weekdays_time(self):
+        '''
+        获取中国区香港工作日时间
+        :return:
+        '''
+        now_time = datetime.now()
+        is_weekday = now_time.weekday()
+        #print("now_time", now_time, 'is_weekday', is_weekday)
+        if is_weekday == 5 or is_weekday == 6:
+            return False
+
+        hour = now_time.hour
+        min = now_time.minute
+        hour_min = hour * 60 + min
+        #print("hour", hour, 'min', min, 'hour_min', hour_min)
+        if hour_min >= 570 and hour_min <= 975:
+            return True
+        return False
+
     def get_us_today_time(self):
         '''
         获取美国区时间
@@ -70,6 +89,25 @@ class CommonUtils:
             return now_time
 
         return us_time
+
+    def get_us_weekdays_time(self):
+        '''
+        获取美国区工作日时间
+        :return:
+        '''
+        china_time = datetime.now()
+        us_time = (china_time - timedelta(hours=12))
+        is_weekday = us_time.weekday()
+        if is_weekday == 5 or is_weekday == 6:
+            return False
+
+        hour = us_time.hour
+        min = us_time.minute
+        hour_min = hour * 60 + min
+        # print("hour", hour, 'min', min, 'hour_min', hour_min)
+        if hour_min >= 570 and hour_min <= 960:
+            return True
+        return False
 
     def get_month_ago_date(self):
         '''
