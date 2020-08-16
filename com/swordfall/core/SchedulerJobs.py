@@ -44,12 +44,15 @@ class SchedulerJobs:
         self.hkStockDaily.update_hk_all_stock_daily_lastest()
 
     def add_us_job(self):
-        print("SchedulerJobs update_us_three_indexes_daily_lastest 每天更新美股三大指数行情")
-        self.schedulerUtils.timer_scheduler(job=self.usIndexesDaily.update_us_three_indexes_daily_lastest, day_of_week='1-6', hour=4, minute=30)
-        print("SchedulerJobs get_ustock_list 每天更新美股列表")
-        self.schedulerUtils.timer_scheduler(job=self.ustockList.get_ustock_list, day_of_week='0-5', hour=1, minute=36)
-        print("SchedulerJobs get_ustock_list 每天更新美股列表")
-        self.schedulerUtils.timer_scheduler(job=self.ustockDaily.update_us_all_stock_daily_lastest, day_of_week='1-6', hour=4, minute=35)
+
+        #self.schedulerUtils.timer_scheduler(job=self.usIndexesDaily.update_us_three_indexes_daily_lastest, day_of_week='1-6', hour=4, minute=30)
+        #self.usIndexesDaily.update_us_three_indexes_daily_lastest()
+
+        #self.schedulerUtils.timer_scheduler(job=self.ustockList.get_ustock_list, day_of_week='0-5', hour=1, minute=36)
+        #self.ustockList.get_ustock_list()
+
+        #self.schedulerUtils.timer_scheduler(job=self.ustockDaily.update_us_all_stock_daily_lastest, day_of_week='1-6', hour=4, minute=35)
+        self.ustockDaily.update_us_all_stock_daily_lastest()
 
     def add_hk_stock_up_job(self):
         print("SchedulerJobs all_stock_trend 计算所有港股上升趋势的个数")
@@ -58,7 +61,7 @@ class SchedulerJobs:
 if __name__ == '__main__':
     sj = SchedulerJobs()
     #sj.add_hk_job()
-    #sj.add_us_job()
+    sj.add_us_job()
     #sj.add_hk_stock_up_job()
     #sj.schedulerUtils.start()
 

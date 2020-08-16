@@ -1,4 +1,5 @@
 import akshare as ak
+from datetime import datetime
 from com.swordfall.service.us.UStockService import UStockService
 from com.swordfall.utils.CommonUtils import CommonUtils
 
@@ -13,6 +14,10 @@ class UstockList:
         获取所有美股信息
         :return:
         '''
+
+        start_time = datetime.now()
+        print("get_ustock_list 每天更新美股列表 start_time:", start_time)
+
         # pd.set_option('display.max_columns', None)  # 显示完整的列
         # pd.set_option('display.max_rows', None)  # 显示完整的行
 
@@ -23,10 +28,11 @@ class UstockList:
         df_list_tuple = []
         stock_exist = self.get_us_stock_exist()
         us_stock_list_str = stock_exist
+        stock_exist_list = stock_exist.split(",")
 
         for lt in df_list:
             stock_symbol = lt[3]
-            if stock_exist.find(stock_symbol) < 0:
+            if stock_symbol not in stock_exist_list:
                 us_stock_list_str += lt[3] + ","
                 lt0 = str(lt[0]) if lt[0] is not None else ''
                 lt1 = str(lt[1]) if lt[1] is not None else ''
@@ -42,6 +48,10 @@ class UstockList:
         # print(flag)
         if flag is True:
             self.update_us_stock_list_exist(us_stock_list_str, 'us_stock_list', len(df_list))
+
+        end_time = datetime.now()
+        time = (end_time - start_time)
+        print("get_ustock_list 每天更新美股列表 end_time:", end_time, "耗时:", time)
 
     def update_us_stock_list_exist(self, hk_stock_list_str, type, count):
         '''

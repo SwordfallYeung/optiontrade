@@ -14,9 +14,8 @@ class HkStockList:
         获取所有港股信息
         :return:
         '''
-        print("SchedulerJobs get_hk_all_stock_list_daily 每天更新港股列表 start")
         start_time = datetime.now()
-        print("start_time", start_time)
+        print("get_hk_all_stock_list_daily 每天更新港股列表 start_time:", start_time)
 
         current_data_df = ak.stock_hk_spot()
         #print(current_data_df)
@@ -26,10 +25,11 @@ class HkStockList:
         df_list_tuple = []
         stock_exist = self.get_hk_stock_exist()
         hk_stock_list_str = stock_exist
+        stock_exist_list = stock_exist.split(",")
 
         for lt in df_list:
             stock_symbol = lt[0]
-            if stock_exist.find(stock_symbol) < 0:
+            if stock_symbol not in stock_exist_list:
                 hk_stock_list_str += lt[0] + ","
                 df_list_tuple.append(tuple(lt[0:4]))
 
@@ -40,10 +40,8 @@ class HkStockList:
             self.update_hk_stock_list_exist(hk_stock_list_str, 'hk_stock_list', len(df_list))
 
         end_time = datetime.now()
-        print("end_time", end_time)
         time = (end_time - start_time)
-        print("耗时", time)
-        print("SchedulerJobs get_hk_all_stock_list_daily 每天更新港股列表 end")
+        print("get_hk_all_stock_list_daily 每天更新港股列表 end_time:", end_time, "耗时:", time)
 
     def update_hk_stock_list_exist(self, hk_stock_list_str, type, count):
         '''

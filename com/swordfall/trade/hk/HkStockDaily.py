@@ -17,7 +17,7 @@ class HkStockDaily(CommonBaseDaily):
         :return:
         '''
         start_time = datetime.now()
-        print("start_time", start_time)
+        print("get_hk_all_stock_daily 获取所有港股的历史行情，不包含今天 start_time:", start_time)
 
         # 获取所有港股代码字符串
         stock_exist = self.hk_stock_service.get_hk_stock_exist(id=1)
@@ -74,9 +74,8 @@ class HkStockDaily(CommonBaseDaily):
         self.update_hk_stock_daily_exist(hk_all_stock_daily_str, 'hk_stock_daily', hk_all_stock_daily_count)
 
         end_time = datetime.now()
-        print("end_time", end_time)
         time = (end_time - start_time)
-        print("耗时", time)
+        print("get_hk_all_stock_daily 获取所有港股的历史行情，不包含今天 end_time:", end_time, "耗时:", time)
 
     def update_hk_stock_daily_exist(self, hk_stock_list_str, type, count):
         '''
@@ -103,9 +102,8 @@ class HkStockDaily(CommonBaseDaily):
         更新港股所有股票代码当前最新的行情，延迟15分钟
         :return:
         '''
-        print("SchedulerJobs update_hk_all_stock_daily_lastest 更新所有港股今天行情 start")
         start_time = datetime.now()
-        print("start_time", start_time)
+        print("update_hk_all_stock_daily_lastest 更新港股所有股票代码当前最新的行情 start_time:", start_time)
 
         current_data_df = ak.stock_hk_spot()
         df_list = self.common_utils.dataframe_to_dict(current_data_df)['data']
@@ -139,10 +137,8 @@ class HkStockDaily(CommonBaseDaily):
             print("insert_stock_daily_batch exception, reason:", ex)
 
         end_time = datetime.now()
-        print("end_time", end_time)
         time = (end_time - start_time)
-        print("耗时", time)
-        print("SchedulerJobs update_hk_all_stock_daily_lastest 更新所有港股今天行情 end")
+        print("update_hk_all_stock_daily_lastest 更新港股所有股票代码当前最新的行情 end_time:", end_time, "耗时:", time)
 
     def get_hk_stock_exist(self):
         '''
@@ -161,7 +157,7 @@ class HkStockDaily(CommonBaseDaily):
         :return:
         '''
         start_time = datetime.now()
-        print("start_time", start_time)
+        print("update_hk_all_stock_point_day 更新每一只港股指定的某一天历史行情 start_time:", start_time)
 
         # 获取所有港股代码字符串
         stock_exist = self.get_hk_stock_exist()
@@ -222,10 +218,11 @@ class HkStockDaily(CommonBaseDaily):
             print(oneday_str, flag, i)
         except Exception as ex:
             print("update_hk_all_stock_point_day exception, reason:", ex)
+
         end_time = datetime.now()
-        print("end_time", end_time)
         time = (end_time - start_time)
-        print("耗时", time)
+        print("update_hk_all_stock_point_day 更新每一只港股指定的某一天历史行情 end_time:", end_time, "耗时:", time)
+
 
 if __name__ == '__main__':
     #get_hk_all_stock_daily()

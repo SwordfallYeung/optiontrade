@@ -50,7 +50,25 @@ class CommonUtils:
         :return:
         '''
         china_time = datetime.now()
-        us_time = (china_time - timedelta(hours=12)).date()
+        us_time = (china_time - timedelta(hours=12))
+        is_weekday = us_time.weekday()
+        if is_weekday == 5:
+            now_time = (us_time - timedelta(hours=24)).date()
+            return now_time
+
+        if is_weekday == 6:
+            now_time = (us_time - timedelta(hours=48)).date()
+            return now_time
+
+        hour = us_time.hour
+        min = us_time.minute
+        if hour < 9 or (hour == 9 and min < 30):
+            now_time = (us_time - timedelta(hours=24)).date()
+            return now_time
+        if (hour == 9 and min >= 30) or hour > 9:
+            now_time = us_time.date()
+            return now_time
+
         return us_time
 
     def get_month_ago_date(self):

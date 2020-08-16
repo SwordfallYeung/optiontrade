@@ -17,7 +17,7 @@ class UstockDaily(CommonBaseDaily):
         :return:
         '''
         start_time = datetime.now()
-        print("start_time", start_time)
+        print("get_us_all_stock_daily 获取每一只美股的所有历史行情，不包含今天 start_time:", start_time)
 
         # 获取所有美股代码字符串
         stock_exist = self.get_us_stock_exist()
@@ -75,9 +75,9 @@ class UstockDaily(CommonBaseDaily):
         self.update_us_stock_daily_exist(us_all_stock_daily_str, 'us_stock_daily', us_all_stock_daily_count)
 
         end_time = datetime.now()
-        print("end_time", end_time)
         time = (end_time - start_time)
-        print("耗时", time)
+        print("get_us_all_stock_daily 获取每一只美股的所有历史行情，不包含今天 end_time:", end_time, "耗时:", time)
+
 
     def update_us_stock_daily_exist(self, us_stock_list_str, type, count):
         '''
@@ -105,7 +105,7 @@ class UstockDaily(CommonBaseDaily):
         :return:
         '''
         start_time = datetime.now()
-        print("start_time", start_time)
+        print("update_us_all_stock_daily_lastest 更新美股所有股票代码每天的行情 start_time:", start_time)
 
         current_data_df = ak.stock_us_spot()
         df_list = self.common_utils.dataframe_to_dict(current_data_df)['data']
@@ -138,9 +138,8 @@ class UstockDaily(CommonBaseDaily):
             print("insert_stock_daily_batch exception, reason:", ex)
 
         end_time = datetime.now()
-        print("end_time", end_time)
         time = (end_time - start_time)
-        print("耗时", time)
+        print("update_us_all_stock_daily_lastest 更新美股所有股票代码每天的行情 end_time:", end_time, "耗时:", time)
 
     def get_us_stock_exist(self):
         '''
@@ -153,62 +152,75 @@ class UstockDaily(CommonBaseDaily):
         if type(stock_exist) is dict:
             return stock_exist.get('symbolstr')
 
-    def update_us_all_stock_point_day(self, oneday_str):
+    def update_us_all_stock_point_day(self, symbol_str, oneday_str):
         '''
         更新每一只美股指定的某一天历史行情
         :return:
         '''
         start_time = datetime.now()
-        print("start_time", start_time)
+        print("update_us_all_stock_point_day 更新每一只美股指定的某一天历史行情 start_time:", start_time)
 
         # 获取所有美股代码字符串
         stock_exist = self.get_us_stock_exist()
         stock_exist_list = stock_exist.split(',')
+        stock_list = symbol_str.split(",")
 
         df_list_tuple = []
         i = 0
         for symbol in stock_exist_list:
-            try:
-                stock_us_daily_df = ak.stock_us_daily(symbol=symbol)
-                # print(stock_us_daily_df, type(stock_us_daily_df))
-            except Exception as e:
-                stock_us_daily_df = None
-                print(" stock_us_daily_df exception, reason:", e)
 
-            df_list_list = stock_us_daily_df.values.__array__() if stock_us_daily_df is not None else []
-            df_date_list = stock_us_daily_df.axes[0].array if stock_us_daily_df is not None else []
+            flag = True
+            if symbol_str != "" and symbol not in stock_list:
+                flag = False
 
-            count = len(df_date_list)
+            if flag:
+                #print("symbol_str", symbol_str)
+                #print("symbol", symbol, "flag", flag)
+                try:
+                    stock_us_daily_df = ak.stock_us_daily(symbol=symbol)
+                    # print(stock_us_daily_df, type(stock_us_daily_df))
+                except Exception as e:
+                    stock_us_daily_df = None
+                    print(" stock_us_daily_df exception, reason:", e)
 
-            if count > 0:
-                oneday_list = oneday_str.split(',')
-                for oneday in oneday_list:
-                    # print('df_date_list', tuple(df_date_list))
-                    # print('count', count)
-                    last_date = datetime.date(df_date_list[count - 1])
-                    # print('last_date', last_date)
-                    onedate = self.exchange_oneday_to_date(oneday)
-                    # print('onedate', onedate)
-                    days = self.days_reduce(last_date, onedate)
-                    if days >= 0:
-                        onedate_index = count - 1 - days
-                        # print('onedate_index', onedate_index)
-                        ondedate_lt = df_list_list[onedate_index]
-                        # print('ondedate_lt', tuple(ondedate_lt))
-                        df_list_tuple.append((symbol, onedate, float(ondedate_lt[0]), float(ondedate_lt[1]),
-                                              float(ondedate_lt[2]), float(ondedate_lt[3]), float(ondedate_lt[4])))
-                        print(i, symbol, onedate, float(ondedate_lt[0]), float(ondedate_lt[1]), float(ondedate_lt[2]),
-                              float(ondedate_lt[3]), float(ondedate_lt[4]))
-                        i += 1
-                        if i % 500 == 0:
-                            df_tuple_tuple = tuple(df_list_tuple)
-                            flag = False
-                            try:
-                                flag = self.us_stock_service.insert_all_stock_daily_batch(df_tuple_tuple)
-                                df_list_tuple = []
-                                print(oneday, flag, i)
-                            except Exception as ex:
-                                print("us_all_stock_point_day_update exception, reason:", ex)
+                df_list_list = stock_us_daily_df.values.__array__() if stock_us_daily_df is not None else []
+                df_date_list = stock_us_daily_df.axes[0].array if stock_us_daily_df is not None else []
+
+                #print(tuple(df_list_list))
+                #print(df_date_list)
+                count = len(df_date_list)
+
+                if count > 0:
+                    oneday_list = oneday_str.split(',')
+                    for oneday in oneday_list:
+                        # print('df_date_list', tuple(df_date_list))
+                        # print('count', count)
+                        last_date = datetime.date(df_date_list[count - 1])
+                        #print('last_date', last_date)
+                        onedate = self.exchange_oneday_to_date(oneday)
+                        #print('onedate', onedate)
+                        days = self.days_reduce(last_date, onedate)
+                        #print('days', days)
+                        if days >= 0 and count > days:
+                            onedate_index = count - 1 - days
+                            #print('onedate_index', onedate_index)
+                            ondedate_lt = df_list_list[onedate_index]
+                            # print('ondedate_lt', tuple(ondedate_lt))
+                            df_list_tuple.append((symbol, onedate, float(ondedate_lt[0]), float(ondedate_lt[1]),
+                                                  float(ondedate_lt[2]), float(ondedate_lt[3]), float(ondedate_lt[4])))
+                            print(i, symbol, onedate, float(ondedate_lt[0]), float(ondedate_lt[1]),
+                                  float(ondedate_lt[2]),
+                                  float(ondedate_lt[3]), float(ondedate_lt[4]))
+                            i += 1
+                            if i % 500 == 0:
+                                df_tuple_tuple = tuple(df_list_tuple)
+                                flag = False
+                                try:
+                                    flag = self.us_stock_service.insert_all_stock_daily_batch(df_tuple_tuple)
+                                    df_list_tuple = []
+                                    print(oneday, flag, i)
+                                except Exception as ex:
+                                    print("us_all_stock_point_day_update exception, reason:", ex)
 
         df_tuple_tuple = tuple(df_list_tuple)
         flag = False
@@ -219,9 +231,8 @@ class UstockDaily(CommonBaseDaily):
             print("us_all_stock_point_day_update exception, reason:", ex)
 
         end_time = datetime.now()
-        print("end_time", end_time)
         time = (end_time - start_time)
-        print("耗时", time)
+        print("update_us_all_stock_point_day 更新每一只美股指定的某一天历史行情 end_time:", end_time, "耗时:", time)
 
     def get_one_us_stock(self, symbol):
         stock_us_daily_df = ak.stock_us_daily(symbol)
@@ -232,29 +243,4 @@ if __name__ == '__main__':
 
     utd = UstockDaily()
     #utd.update_us_all_stock_daily_lastest()
-    utd.update_us_all_stock_point_day("2020-08-03,2020-08-04,2020-08-05,2020-08-06,2020-08-07")
-
-    # us_time = get_us_today_time()
-    # print(us_time)
-
-    #print(exchange_oneday_to_date('2020-07-27'))
-
-    # first_day = exchange_oneday_to_date('2020-07-14')
-    # second_day = exchange_oneday_to_date('2020-07-25')
-    # days = days_reduce(first_day, second_day)
-    # if days > 0 :
-    #     print("正常")
-    # else:
-    #     print("不正常")
-    # print(days)
-
-    #update_us_all_stock_point_day('2020-07-29')
-
-    #get_one_us_stock('IGLEU')
-
-    # start_time = datetime.now()
-    # time.sleep(2)
-    # end_time = datetime.now()
-    # time = (end_time - start_time)
-    # print("耗时", time, "s")
-
+    utd.update_us_all_stock_point_day("FRLN,GRSVU,HOLUU,IBBJ,IIVIP,KSMTU,MLACW,RACA,TCHP,TDVG,TEQI,TGRW,TREB,VMACU,BEKE,CVAC,NTST,FSDC,DUAL,FLUX,FUSE,KBNT,KBNTW,LCAPU,WSBCP", "2020-08-12,2020-08-13")
