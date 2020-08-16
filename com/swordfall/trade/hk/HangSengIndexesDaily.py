@@ -1,5 +1,7 @@
 from com.swordfall.trade.common.CommonIndexesDaily import CommonIndexesDaily
 from datetime import datetime
+import requests
+import pandas as pd
 
 class HangSengIndexesDaily:
 
@@ -38,7 +40,31 @@ class HangSengIndexesDaily:
         time = (end_time - start_time)
         print("update_hk_hang_seng_index_daily_lastest 更新港股恒生指数最新行情 end_time:", end_time, "耗时:", time)
 
+    def get_hk_hang_seng_index_substock(self):
+        start_time = datetime.now()
+        print("get_hk_hang_seng_index_substock  start_time:", start_time)
+
+        url = 'https://jpmhkwarrants.com/zh_hk/ajax/sector_hsi_hsce/type/hsi_top/order/6/desc/1'
+        headers = {
+            "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
+
+        request = requests.get(url, headers=headers)
+        data = pd.read_html(request.text)[0]
+
+        print(data)
+
+        # 欄位『Symbol』就是股票代碼
+        #stk_list = data.Symbol
+
+        # 用 replace 將符號進行替換
+        #stk_list = data.Symbol.apply(lambda x: x.replace('.', '-'))
+
+        end_time = datetime.now()
+        time = (end_time - start_time)
+        print("get_hk_hang_seng_index_substock end_time:", end_time, "耗时:", time)
+
 if __name__ == '__main__':
     #get_hk_hang_seng_index_daily("2020-08-02","2020-08-02")
     hsid = HangSengIndexesDaily()
-    hsid.update_hk_hang_seng_index_daily_lastest()
+    #hsid.update_hk_hang_seng_index_daily_lastest()
+    hsid.get_hk_hang_seng_index_substock()

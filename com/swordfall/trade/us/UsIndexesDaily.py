@@ -1,5 +1,7 @@
 from com.swordfall.trade.common.CommonIndexesDaily import CommonIndexesDaily
 from datetime import datetime
+import pandas as pd
+import requests
 
 class UsIndexesDaily:
 
@@ -54,10 +56,26 @@ class UsIndexesDaily:
         time = (end_time - start_time)
         print("update_us_three_indexes_daily_lastest 每天更新美股三大指数行情 end_time:", end_time, "耗时:", time)
 
+    def get_us_indexes_daily_substock(self):
+        url = 'https://www.slickcharts.com/sp500'
+        headers = {
+            "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
+
+        request = requests.get(url, headers=headers)
+
+        data = pd.read_html(request.text)[0]
+
+        # 欄位『Symbol』就是股票代碼
+        stk_list = data.Symbol
+
+        # 用 replace 將符號進行替換
+        stk_list = data.Symbol.apply(lambda x: x.replace('.', '-'))
+        print(stk_list)
 
 if __name__ == '__main__':
     #get_us_indexes_daily("道琼斯指数","2020-01-01","2020-08-02")
     #get_us_indexes_daily("标普500指数", "2020-01-01", "2020-08-02")
     #get_us_indexes_daily("纳斯达克综合指数", "2020-01-01", "2020-08-02")
     uid = UsIndexesDaily()
-    uid.update_us_three_indexes_daily_lastest()
+    #uid.update_us_three_indexes_daily_lastest()
+    uid.get_us_indexes_daily_substock()
