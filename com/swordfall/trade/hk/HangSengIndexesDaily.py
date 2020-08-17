@@ -2,11 +2,13 @@ from com.swordfall.trade.common.CommonIndexesDaily import CommonIndexesDaily
 from datetime import datetime
 import requests
 import pandas as pd
+from com.swordfall.service.hk.HKStockService import HKStockService
 
 class HangSengIndexesDaily:
 
     def __init__(self):
         self.common_indexes_daily = CommonIndexesDaily()
+        self.hk_stock_service = HKStockService()
 
     def get_hk_hang_seng_index_daily(self, start_date, end_date):
         '''
@@ -51,17 +53,46 @@ class HangSengIndexesDaily:
         request = requests.get(url, headers=headers)
         data = pd.read_html(request.text)[0]
 
-        print(data)
+        sub_stocks_list = data['股票'].values
 
-        # 欄位『Symbol』就是股票代碼
-        #stk_list = data.Symbol
+        index_substock_exist = self.get_hk_index_substock_exist()
+        index_substock_exist_list = index_substock_exist.split(",")
 
-        # 用 replace 將符號進行替換
-        #stk_list = data.Symbol.apply(lambda x: x.replace('.', '-'))
+        for stock in sub_stocks_list:
+            symbol_name_arr = str(stock[0]).split(" ")
+            if len(symbol_name_arr[0]) == 4:
+                symbol_name_arr[0] = str(0) + symbol_name_arr[0]
+            symbol_name = symbol_name_arr[0] + "_" + symbol_name_arr[1]
+            print(symbol_name)
+
+            if symbol_name not in index_substock_exist_list:
+                index_substock_exist += symbol_name + ","
+
+        self.update_hk_index_substock_list_exist(index_substock_exist, 'hk_index_substock_list', len(sub_stocks_list))
 
         end_time = datetime.now()
         time = (end_time - start_time)
         print("get_hk_hang_seng_index_substock end_time:", end_time, "耗时:", time)
+
+    def get_hk_index_substock_exist(self):
+        '''
+        获取港股恒生指数成份股代码字符串
+        :return:
+        '''
+        stock_exist = self.hk_stock_service.get_hk_stock_exist(5)
+        if stock_exist is None:
+            return ""
+        if type(stock_exist) is dict:
+            return stock_exist.get('symbolstr')
+
+    def update_hk_index_substock_list_exist(self, hk_stock_list_str, type, count):
+        '''
+        更新所有港股恒生指数成份股代码字符串
+        :param hk_stock_list_str:
+        :param count:
+        :return:
+        '''
+        self.hk_stock_service.insert_or_update_hk_stock_exist(5, hk_stock_list_str, type, count)
 
 if __name__ == '__main__':
     #get_hk_hang_seng_index_daily("2020-08-02","2020-08-02")
