@@ -62,7 +62,6 @@ class UsIndexesDaily:
             "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
 
         request = requests.get(url, headers=headers)
-
         data = pd.read_html(request.text)[0]
 
         # 欄位『Symbol』就是股票代碼

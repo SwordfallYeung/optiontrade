@@ -28,54 +28,43 @@ class SchedulerJobs:
         self.stockTrend = StockTrend()
         self.commonUtils = CommonUtils()
 
-    def run_daemon_thread(self, job, method_type, run_type):
-        job_thread = threading.Thread(target=job(method_type, run_type))
+    def run_daemon_thread(self, job, run_type):
+        job_thread = threading.Thread(target=job(run_type))
         job_thread.setDaemon(True)
         job_thread.start()
 
-    def hk_stock_service(self, method_type, run_type):
+    def hk_stock_service(self, run_type):
         if run_type == 'interval':
-            flag = True
-            while (flag):
-                if method_type == 'index':
+            flag = self.commonUtils.get_china_hk_weekdays_time()
+            #print('interval-flag', flag)
+            if (flag):
                     self.hangSengIndexesDaily.update_hk_hang_seng_index_daily_lastest()
-                elif method_type == 'daily':
                     self.hkStockDaily.update_hk_all_stock_daily_lastest()
-                time.sleep(15 * 60)
-                flag = self.commonUtils.get_china_hk_weekdays_time()
         elif run_type == 'only':
-            if method_type == 'list':
-                self.hkStockList.get_hk_all_stock_list_daily()
+            self.hkStockList.get_hk_all_stock_list_daily()
 
     def add_hk_job_schedule(self):
-        schedule.every().day.at("9:30").do(self.run_daemon_thread, self.hk_stock_service, 'index', 'interval')
-        schedule.every().day.at("9:30").do(self.run_daemon_thread, self.hk_stock_service, 'list', 'only')
-        schedule.every().day.at("9:30").do(self.run_daemon_thread, self.hk_stock_service, 'daily', 'interval')
-
+        schedule.every().day.at("09:30").do(self.run_daemon_thread, self.hk_stock_service, 'only')
+        schedule.every(15).minutes.do(self.run_daemon_thread, self.hk_stock_service, 'interval')
 
     def add_hk_job_aps(self):
         self.apsSchedulerUtils.timer_scheduler(job=self.hangSengIndexesDaily.update_hk_hang_seng_index_daily_lastest, day_of_week='0-5', hour=23, minute=00)
         self.apsSchedulerUtils.timer_scheduler(job=self.hkStockList.get_hk_all_stock_list_daily, day_of_week='0-6', hour=16, minute=37)
         self.apsSchedulerUtils.timer_scheduler(job=self.hkStockDaily.update_hk_all_stock_daily_lastest, day_of_week='0-5', hour=23, minute=5)
 
-    def us_stock_service(self, method_type, run_type):
+    def us_stock_service(self, run_type):
         if run_type == 'interval':
-            flag = True
-            while (flag):
-                if method_type == 'index':
-                    self.usIndexesDaily.update_us_three_indexes_daily_lastest()
-                elif method_type == 'daily':
-                    self.ustockDaily.update_us_all_stock_daily_lastest()
-                time.sleep(15 * 60)
-                flag = self.commonUtils.get_us_weekdays_time()
+            flag = self.commonUtils.get_us_weekdays_time()
+            # print('interval-flag', flag)
+            if flag:
+                self.usIndexesDaily.update_us_three_indexes_daily_lastest()
+                self.ustockDaily.update_us_all_stock_daily_lastest()
         elif run_type == 'only':
-            if method_type == 'list':
                 self.ustockList.get_ustock_list()
 
     def add_us_job_schedule(self):
-        schedule.every().day.at("21:30").do(self.run_daemon_thread, self.us_stock_service, 'index', 'interval')
-        schedule.every().day.at("21:30").do(self.run_daemon_thread, self.us_stock_service, 'list', 'only')
-        schedule.every().day.at("21:30").do(self.run_daemon_thread, self.us_stock_service, 'daily', 'interval')
+        schedule.every().day.at("21:30").do(self.run_daemon_thread, self.us_stock_service, 'only')
+        schedule.every(15).minutes.do(self.run_daemon_thread, self.us_stock_service, 'interval')
 
     def add_us_job_aps(self):
         self.apsSchedulerUtils.timer_scheduler(job=self.usIndexesDaily.update_us_three_indexes_daily_lastest, day_of_week='1-6', hour=4, minute=30)
@@ -88,9 +77,9 @@ class SchedulerJobs:
 
 if __name__ == '__main__':
     sj = SchedulerJobs()
-    #sj.add_hk_job_schedule()
-    #sj.add_us_job_schedule()
-    sj.add_hk_stock_up_job()
+    sj.add_hk_job_schedule()
+    sj.add_us_job_schedule()
+    #sj.add_hk_stock_up_job()
 
     while True:
         schedule.run_pending()
