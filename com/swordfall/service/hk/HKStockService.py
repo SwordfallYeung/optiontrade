@@ -38,7 +38,7 @@ class HKStockService:
         :param count: 港股数量
         :return:
         '''
-        sql = "replace into stock_list_exist(id, symbolstr, type, count) values ('%s', '%s', '%s', %s)" % (id, symbolstr, type, count)
+        sql = "replace into stock_list_exist(id, symbolstr, type, count) values ('%s', \"%s\", '%s', %s)" % (id, symbolstr, type, count)
         return self.mysql_utils.insert_or_update(sql)
 
     def get_hk_stock_exist(self, id):

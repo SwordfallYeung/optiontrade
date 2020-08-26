@@ -24,20 +24,22 @@ class HkStockList:
 
         df_list_tuple = []
         stock_exist = self.get_hk_stock_exist()
-        hk_stock_list_str = stock_exist
         stock_exist_list = stock_exist.split(",")
 
         for lt in df_list:
-            stock_symbol = lt[0]
-            if stock_symbol not in stock_exist_list:
-                hk_stock_list_str += lt[0] + ","
+            symbol_name = lt[0] + "_" + lt[1]
+            print(symbol_name)
+            if symbol_name not in stock_exist_list:
+                stock_exist += symbol_name + ","
                 df_list_tuple.append(tuple(lt[0:4]))
 
         df_tuple_tuple = tuple(df_list_tuple)
         print(df_tuple_tuple)
-        flag = self.hk_stock_service.insert_batch(df_tuple_tuple)
+        #flag = self.hk_stock_service.insert_batch(df_tuple_tuple)
+        flag = True
         if flag is True:
-            self.update_hk_stock_list_exist(hk_stock_list_str, 'hk_stock_list', len(df_list))
+            print(stock_exist)
+            self.update_hk_stock_list_exist(stock_exist, 'hk_stock_list', len(df_list))
 
         end_time = datetime.now()
         time = (end_time - start_time)
