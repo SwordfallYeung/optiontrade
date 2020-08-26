@@ -18,7 +18,7 @@ class StockTrend(BaseTrend):
         if type(stock_exist) is dict:
             return stock_exist.get('symbolstr')
 
-    def stock_trend(self, stock_name):
+    def hk_stock_trend(self, stock_name):
         now_date = str(self.commonUtils.get_china_today_time())
         month_ago_date = str(self.commonUtils.get_month_ago_date())
         stock_daily = self.commonStockService.select_stock_batch("hk_stock_daily", stock_name, month_ago_date, now_date)
@@ -30,7 +30,7 @@ class StockTrend(BaseTrend):
 
         return self.calculate_nearby_daily_status(stock_daily)
 
-    def substock_trend(self, substock_exist_list):
+    def hk_substock_trend(self, substock_exist_list):
         for symbol_name in substock_exist_list:
             if len(symbol_name) > 0:
                 symbol_name_array = symbol_name.split("_")
@@ -41,7 +41,7 @@ class StockTrend(BaseTrend):
                     print('symbol', symbol, 'calculate_status', calculate_status, name)
 
 
-    def all_stock_trend(self):
+    def hk_all_stock_trend(self):
         # 获取所有港股代码字符串
         stock_exist = self.get_hk_stock_exist(1)
         stock_exist_list = stock_exist.split(',')
