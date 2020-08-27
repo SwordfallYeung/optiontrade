@@ -28,7 +28,6 @@ class HkStockList:
 
         for lt in df_list:
             symbol_name = lt[0] + "_" + lt[1]
-            print(symbol_name)
             if symbol_name not in stock_exist_list:
                 stock_exist += symbol_name + ","
                 df_list_tuple.append(tuple(lt[0:4]))
