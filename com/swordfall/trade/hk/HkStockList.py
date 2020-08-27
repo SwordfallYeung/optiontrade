@@ -35,8 +35,7 @@ class HkStockList:
 
         df_tuple_tuple = tuple(df_list_tuple)
         print(df_tuple_tuple)
-        #flag = self.hk_stock_service.insert_batch(df_tuple_tuple)
-        flag = True
+        flag = self.hk_stock_service.insert_batch(df_tuple_tuple)
         if flag is True:
             print(stock_exist)
             self.update_hk_stock_list_exist(stock_exist, 'hk_stock_list', len(df_list))
