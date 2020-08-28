@@ -27,27 +27,28 @@ class UstockList:
 
         df_list_tuple = []
         stock_exist = self.get_us_stock_exist()
-        us_stock_list_str = stock_exist
         stock_exist_list = stock_exist.split(",")
 
         for lt in df_list:
-            stock_symbol = lt[3]
-            if stock_symbol not in stock_exist_list:
-                us_stock_list_str += lt[3] + ","
-                lt0 = str(lt[0]) if lt[0] is not None else ''
-                lt1 = str(lt[1]) if lt[1] is not None else ''
-                lt2 = str(lt[2]) if lt[2] is not None else ''
-                lt3 = str(lt[3]) if lt[3] is not None else ''
-                lt15 = str(lt[15]) if lt[15] is not None else ''
-                # print((lt0, lt1, lt2, lt3, lt15))
-                df_list_tuple.append((lt0, lt1, lt2, lt3, lt15))
+            symbol_name = lt[3]
+            #print(symbol_name)
+            if symbol_name not in stock_exist_list:
+                stock_exist += symbol_name + ","
+                name = str(lt[0]) if lt[0] is not None else ''
+                cname = str(lt[1]) if lt[1] is not None else ''
+                types = str(lt[2]) if lt[2] is not None else ''
+                symbol = str(lt[3]) if lt[3] is not None else ''
+                market = str(lt[15]) if lt[15] is not None else ''
+                market_cap = int(lt[13]) if lt[13] is not None else 0
+                # print((name, cname, type, symbol, market, market_cap))
+                df_list_tuple.append((name, cname, types, symbol, market, market_cap))
 
         df_tuple_tuple = tuple(df_list_tuple)
-        # print(df_tuple_tuple)
+        #print(df_tuple_tuple)
         flag = self.us_stock_service.insert_batch(df_tuple_tuple)
         # print(flag)
         if flag is True:
-            self.update_us_stock_list_exist(us_stock_list_str, 'us_stock_list', len(df_list))
+            self.update_us_stock_list_exist(stock_exist, 'us_stock_list', len(df_list))
 
         end_time = datetime.now()
         time = (end_time - start_time)

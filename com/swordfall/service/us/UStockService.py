@@ -27,8 +27,8 @@ class UStockService:
         :param df_dict: 元组
         :return: 成功或者失败 true or false
         '''
-        sql = "insert into us_stock_list(name, cname, type, symbol, market) \
-                       values (%s, %s, %s, %s, %s)"
+        sql = "insert into us_stock_list(name, cname, type, symbol, market, market_cap) \
+                       values (%s, %s, %s, %s, %s, %s)"
         return self.mysql_utils.insert_batch(sql, df_dict)
 
     def insert_or_update_us_stock_exist(self, id, symbolstr, type, count):
@@ -39,7 +39,7 @@ class UStockService:
         :param count: 股票数量
         :return: 成功则返回股票代码字符串，失败返回false
         '''
-        sql = "replace into stock_list_exist(id, symbolstr, type, count) values ('%s', '%s', '%s', %s)" % (id, symbolstr, type, count)
+        sql = "replace into stock_list_exist(id, symbolstr, type, count) values ('%s', \"%s\", '%s', %s)" % (id, symbolstr, type, count)
         return self.mysql_utils.insert_or_update(sql)
 
     def get_us_stock_exist(self, id):
@@ -66,7 +66,7 @@ class UStockService:
         :param df_tuple: 元组
         :return:
         '''
-        sql =  "replace into us_stock_daily(symbol, date, open, high, low, close, volume) \
+        sql = "replace into us_stock_daily(symbol, date, open, high, low, close, volume) \
                        values (%s, %s, %s, %s, %s, %s, %s)"
         return self.mysql_utils.insert_batch(sql, df_tuple)
 
@@ -76,5 +76,21 @@ class UStockService:
         :param df_tuple: 元组
         :return:
         '''
-        sql =  "SELECT count(*) FROM `option_trade`.`us_stock_daily` WHERE `symbol` = %s AND `date` = '2020-07-20'" % (symbol)
+        sql = "SELECT count(*) FROM `option_trade`.`us_stock_daily` WHERE `symbol` = %s AND `date` = '2020-07-20'" % (symbol)
         return self.mysql_utils.select_one(sql)
+
+    def get_us_stock_by_symbol(self, symbol):
+        '''
+        根据symbol获取美股的中文名
+        :return:
+        '''
+        sql = "select cname from us_stock_list where symbol = \"%s\"" % (symbol)
+        return self.mysql_utils.select_one(sql)
+
+    def get_us_stock_with_type_and_market_cap(self, type, market_cap):
+        '''
+        根据symbol获取美股的中文名
+        :return:
+        '''
+        sql = "select symbol, cname from us_stock_list where type = \"%s\" and market_cap >= %s" % (type, market_cap)
+        return self.mysql_utils.select_all(sql)

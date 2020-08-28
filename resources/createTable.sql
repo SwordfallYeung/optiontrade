@@ -9,7 +9,7 @@ create table if not exists hk_stock_list(
 create table if not exists stock_list_exist(
     id int  not null auto_increment  primary key,
     symbolstr text not null,
-    type varchar(50) not null,
+    type varchar(70) not null,
     count int(10) not null
     );
 
@@ -19,6 +19,7 @@ create table if not exists us_stock_list(
     cname varchar(100) not null,
     type varchar(30) not null,
     symbol varchar(10) not null,
+    market_cap bigint not null,
     market varchar(10) not null
     );
 
@@ -34,7 +35,7 @@ create table if not exists hk_stock_daily(
     );
 
 create table if not exists us_stock_daily(
-    id int  not null auto_increment  primary key,
+    id int not null auto_increment  primary key,
     symbol varchar(8) not null,
     date date not null,
     open float not null,
