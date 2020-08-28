@@ -59,9 +59,13 @@ class UsIndexesDaily:
         time = (end_time - start_time)
         print("update_us_three_indexes_daily_lastest 每天更新美股三大指数行情 end_time:", end_time, "耗时:", time)
 
-    def get_us_indexes_daily_substock(self, url, id, type):
+    def get_us_indexes_daily_substock_deprecated(self, url, id, type):
         start_time = datetime.now()
-        print("get_us_indexes_daily_substock start_time:", start_time)
+        print("get_us_indexes_daily_substock_deprecated start_time:", start_time)
+
+        # https://www.slickcharts.com/sp500
+        # https://www.slickcharts.com/nasdaq100
+        # https://www.slickcharts.com/dowjones
 
         headers = {
             "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
@@ -72,15 +76,74 @@ class UsIndexesDaily:
         # 欄位『Symbol』就是股票代碼
         sub_stocks_list = data.Symbol.values
 
-        index_substock_exist = self.get_us_index_substock_exist(id)
-        index_substock_exist_list = index_substock_exist.split(",")
+        index_substock_exist = ""
 
         for symbol_name in sub_stocks_list:
-
-            if symbol_name not in index_substock_exist_list:
-                index_substock_exist += symbol_name + ","
+            index_substock_exist += symbol_name + ","
 
         self.update_us_index_substock_list_exist(id, index_substock_exist, type, len(sub_stocks_list))
+
+        end_time = datetime.now()
+        time = (end_time - start_time)
+        print("get_us_indexes_daily_substock_deprecated end_time:", end_time, "耗时:", time)
+
+    def parsing_us_indexes_substock(self, salt, id):
+        headers = {
+            "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
+
+        mktcap = 2000000000
+        page = 1
+        flag = True
+        n = 0
+        substock_exist = ""
+        i = 0
+
+        while(flag):
+            url = "http://stock.finance.sina.com.cn/usstock/api/jsonp.php/IO.XSRV2.CallbackList['" + salt + "']/US_CategoryService.getChengfen?page=" + str(page) + "&num=60&sort=mktcap&asc=0&market=&id=&type=" + id
+            request = requests.get(url, headers=headers)
+            request_content = re.sub(r'IO.XSRV2.CallbackList.*]\(', "",
+                                     request.text.replace("/*<script>location.href='//sina.com';</script>*/\n", "").replace(");", ""))
+            js = json.loads(request_content)
+
+            count = int(js['count']['up']) + int(js['count']['down']) + int(js['count']['z'])
+            n += len(js['data'])
+
+            if salt == "Zh5NOtRXXXZ5ZRHU":
+                for stock in js['data']:
+                    if int(float(stock['mktcap'])) >= mktcap:
+                        symbol_name = stock['symbol'] + "_" + stock['cname']
+                        substock_exist += symbol_name + ","
+                        i += 1
+                    else:
+                        flag = False
+                        break
+            else:
+                for stock in js['data']:
+                    symbol_name = stock['symbol'] + "_" + stock['cname']
+                    substock_exist += symbol_name + ","
+                    i += 1
+            if count == n:
+                flag = False
+
+            page += 1
+
+        return (i, substock_exist)
+
+    def get_us_indexes_daily_substock(self):
+        start_time = datetime.now()
+        print("get_us_indexes_daily_substock start_time:", start_time)
+
+        print("------ 标普500 -------")
+        (sp500_count, sp500_data) = self.parsing_us_indexes_substock('UF1rlz5CGEXBXJu1', '2')
+        self.update_us_index_substock_list_exist(6, sp500_data, 'us_plate_dowjones_substock_list', sp500_count)
+
+        print("------ 纳克达斯 -------")
+        (nasdaq_count, nasdaq_data) = self.parsing_us_indexes_substock('Zh5NOtRXXXZ5ZRHU', '1')
+        self.update_us_index_substock_list_exist(7, nasdaq_data, 'us_plate_dowjones_substock_list', nasdaq_count)
+
+        print("------ 道琼斯 -------")
+        (dowjones_count, dowjones_data) = self.parsing_us_indexes_substock('UF1rlz5CGEXAXJu1', '3')
+        self.update_us_index_substock_list_exist(8, dowjones_data, 'us_plate_dowjones_substock_list', dowjones_count)
 
         end_time = datetime.now()
         time = (end_time - start_time)
@@ -98,13 +161,10 @@ class UsIndexesDaily:
         i = 0
 
         while(flag):
-            url = "http://stock.finance.sina.com.cn/usstock/api/jsonp.php/IO.XSRV2.CallbackList['" + salt + "']/US_CategoryService.getList?page=" + str(
-                page) + "&num=60&sort=&asc=0&market=&id=" + id
+            url = "http://stock.finance.sina.com.cn/usstock/api/jsonp.php/IO.XSRV2.CallbackList['" + salt + "']/US_CategoryService.getList?page=" + str(page) + "&num=60&sort=&asc=0&market=&id=" + id
             request = requests.get(url, headers=headers)
             request_content = re.sub(r'IO.XSRV2.CallbackList.*]\(', "",
-                                     request.text.replace("/*<script>location.href='//sina.com';</script>*/\n",
-                                                          "").replace(
-                                         ");", ""))
+                                     request.text.replace("/*<script>location.href='//sina.com';</script>*/\n", "").replace(");", ""))
             js = json.loads(request_content)
 
             count = js['count']
@@ -508,9 +568,7 @@ if __name__ == '__main__':
     #get_us_indexes_daily("纳斯达克综合指数", "2020-01-01", "2020-08-02")
     uid = UsIndexesDaily()
     #uid.update_us_three_indexes_daily_lastest()
-    #uid.get_us_indexes_daily_substock('https://www.slickcharts.com/sp500', 6, 'us_sp500_index_substock_list')
-    #uid.get_us_indexes_daily_substock('https://www.slickcharts.com/nasdaq100', 7, 'us_nasdaq100_index_substock_list')
-    #uid.get_us_indexes_daily_substock('https://www.slickcharts.com/dowjones', 8, 'us_dowjones_index_substock_list')
+    uid.get_us_indexes_daily_substock()
     #uid.get_us_plate_substock()
     #uid.get_us_plate_other_substock()
-    uid.get_us_plate_china_concept_stock()
+    #uid.get_us_plate_china_concept_stock()

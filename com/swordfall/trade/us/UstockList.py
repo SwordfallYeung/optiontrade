@@ -39,7 +39,7 @@ class UstockList:
                 types = str(lt[2]) if lt[2] is not None else ''
                 symbol = str(lt[3]) if lt[3] is not None else ''
                 market = str(lt[15]) if lt[15] is not None else ''
-                market_cap = int(lt[13]) if lt[13] is not None else 0
+                market_cap = int(float(lt[13])) if lt[13] is not None else 0
                 # print((name, cname, type, symbol, market, market_cap))
                 df_list_tuple.append((name, cname, types, symbol, market, market_cap))
 

@@ -198,5 +198,5 @@ class StockTrend(BaseTrend):
 if __name__ == '__main__':
     st = StockTrend()
     #st.stock_trend("00700")
-    st.hk_all_stock_trend()
-    #st.us_all_stock_trend()
+    #st.hk_all_stock_trend()
+    st.us_all_stock_trend()
