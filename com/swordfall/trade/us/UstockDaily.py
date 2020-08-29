@@ -243,4 +243,4 @@ if __name__ == '__main__':
 
     utd = UstockDaily()
     #utd.update_us_all_stock_daily_lastest()
-    utd.update_us_all_stock_point_day("FRLN,GRSVU,HOLUU,IBBJ,IIVIP,KSMTU,MLACW,RACA,TCHP,TDVG,TEQI,TGRW,TREB,VMACU,BEKE,CVAC,NTST,FSDC,DUAL,FLUX,FUSE,KBNT,KBNTW,LCAPU,WSBCP", "2020-08-12,2020-08-13")
+    utd.update_us_all_stock_point_day("", "2020-08-20,2020-08-21,2020-08-24,2020-08-25,2020-08-26,2020-08-27,2020-08-28")

@@ -165,11 +165,15 @@ class HkStockDaily(CommonBaseDaily):
 
         df_list_tuple = []
         i = 0
-        for symbol in stock_exist_list:
-            #if symbol == '09969':
+        for symbol_name in stock_exist_list:
+            #if symbol_name == '02936_朗廷－ＳＳ股权':
                 try:
-                    stock_hk_daily_df = ak.stock_hk_daily(symbol=symbol)
-                    print(stock_hk_daily_df, type(stock_hk_daily_df))
+                    symbol_name_array = symbol_name.split("_")
+                    if len(symbol_name_array) >= 2:
+                        symbol = symbol_name_array[0]
+                        name = symbol_name_array[1]
+                        stock_hk_daily_df = ak.stock_hk_daily(symbol=symbol)
+                        #print(stock_hk_daily_df, type(stock_hk_daily_df))
                 except Exception as e:
                     stock_hk_daily_df = None
                     print(" stock_us_daily_df exception, reason:", e)
@@ -182,23 +186,24 @@ class HkStockDaily(CommonBaseDaily):
                 if count > 0:
                     oneday_list = oneday_str.split(',')
                     for oneday in oneday_list:
-                        # print('df_date_list', tuple(df_date_list))
-                        # print('count', count)
+                        #print('df_date_list', tuple(df_date_list))
+                        #print('count', count)
                         last_date = datetime.date(df_date_list[count - 1])
-                        # print('last_date', last_date)
+                        #print('last_date', last_date)
                         onedate = self.exchange_oneday_to_date(oneday)
-                        # print('onedate', onedate)
+                        #print('onedate', onedate)
                         days = self.days_reduce(last_date, onedate)
-                        if days >= 0:
-                            onedate_index = count - 1 - days
-                            # print('onedate_index', onedate_index)
+                        #print('days', days)
+                        onedate_index = count - 1 - days
+                        #print('onedate_index', onedate_index)
+                        if days >= 0 and onedate_index >= 0:
                             ondedate_lt = df_list_list[onedate_index]
                             # print('ondedate_lt', tuple(ondedate_lt))
 
                             df_list_tuple.append(
                                 (symbol, onedate, float(ondedate_lt[0]), float(ondedate_lt[1]), float(ondedate_lt[2]),
                                  float(ondedate_lt[3]), float(ondedate_lt[4])))
-                            print(symbol, onedate, float(ondedate_lt[0]), float(ondedate_lt[1]), float(ondedate_lt[2]),
+                            print(name, symbol, onedate, float(ondedate_lt[0]), float(ondedate_lt[1]), float(ondedate_lt[2]),
                                   float(ondedate_lt[3]), float(ondedate_lt[4]))
                             i += 1
                             if i % 500 == 0:
@@ -229,4 +234,4 @@ if __name__ == '__main__':
     hksd = HkStockDaily()
     #hksd.update_hk_all_stock_daily_lastest()
 
-    hksd.update_hk_all_stock_point_day('2020-08-05,2020-08-06,2020-08-07')
+    hksd.update_hk_all_stock_point_day('2020-08-19,2020-08-20,2020-08-21,2020-08-24,2020-08-25,2020-08-27,2020-08-28')
