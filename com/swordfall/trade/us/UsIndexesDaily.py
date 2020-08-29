@@ -111,7 +111,7 @@ class UsIndexesDaily:
             if salt == "Zh5NOtRXXXZ5ZRHU":
                 for stock in js['data']:
                     if int(float(stock['mktcap'])) >= mktcap:
-                        symbol_name = stock['symbol'] + "_" + stock['cname']
+                        symbol_name = stock['symbol'] + "_" + stock['cname'].replace(",", "")
                         substock_exist += symbol_name + ","
                         i += 1
                     else:
@@ -119,7 +119,7 @@ class UsIndexesDaily:
                         break
             else:
                 for stock in js['data']:
-                    symbol_name = stock['symbol'] + "_" + stock['cname']
+                    symbol_name = stock['symbol'] + "_" + stock['cname'].replace(",", "")
                     substock_exist += symbol_name + ","
                     i += 1
             if count == n:
@@ -135,11 +135,11 @@ class UsIndexesDaily:
 
         print("------ 标普500 -------")
         (sp500_count, sp500_data) = self.parsing_us_indexes_substock('UF1rlz5CGEXBXJu1', '2')
-        self.update_us_index_substock_list_exist(6, sp500_data, 'us_plate_dowjones_substock_list', sp500_count)
+        self.update_us_index_substock_list_exist(6, sp500_data, 'us_plate_sp500_substock_list', sp500_count)
 
         print("------ 纳克达斯 -------")
         (nasdaq_count, nasdaq_data) = self.parsing_us_indexes_substock('Zh5NOtRXXXZ5ZRHU', '1')
-        self.update_us_index_substock_list_exist(7, nasdaq_data, 'us_plate_dowjones_substock_list', nasdaq_count)
+        self.update_us_index_substock_list_exist(7, nasdaq_data, 'us_plate_nasdaq_substock_list', nasdaq_count)
 
         print("------ 道琼斯 -------")
         (dowjones_count, dowjones_data) = self.parsing_us_indexes_substock('UF1rlz5CGEXAXJu1', '3')
@@ -172,7 +172,7 @@ class UsIndexesDaily:
 
             for stock in js['data']:
                 if int(stock['mktcap']) >= mktcap:
-                    symbol_name = stock['symbol'] + "_" + stock['cname']
+                    symbol_name = stock['symbol'] + "_" + stock['cname'].replace(",", "")
                     substock_exist += symbol_name + ","
                     i += 1
                 else:
@@ -490,17 +490,6 @@ class UsIndexesDaily:
         time = (end_time - start_time)
         print("get_us_plate_substock end_time:", end_time, "耗时:", time)
 
-    def get_us_plate_other_substock(self):
-        market_cap = 5000000000
-        stock_list = self.us_stock_service.get_us_stock_with_type_and_market_cap('', market_cap)
-
-        substock_exist = ""
-        for stock in stock_list:
-            symbol_name = stock['symbol'] + "_" + stock['cname']
-            substock_exist += symbol_name + ","
-
-        self.update_us_index_substock_list_exist(102, substock_exist, 'get_us_plate_other_substock_list', len(stock_list))
-
     def get_us_plate_china_concept_stock(self):
         headers = {
             "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
@@ -540,7 +529,18 @@ class UsIndexesDaily:
 
             page += 1
 
-        self.update_us_index_substock_list_exist(103, substock_exist, 'get_us_plate_china_concept_stock_list', i)
+        self.update_us_index_substock_list_exist(102, substock_exist, 'get_us_plate_china_concept_stock_list', i)
+
+    def get_us_plate_other_substock(self):
+        market_cap = 5000000000
+        stock_list = self.us_stock_service.get_us_stock_with_type_and_market_cap('', market_cap)
+
+        substock_exist = ""
+        for stock in stock_list:
+            symbol_name = stock['symbol'] + "_" + stock['cname']
+            substock_exist += symbol_name + ","
+
+        self.update_us_index_substock_list_exist(103, substock_exist, 'get_us_plate_other_substock_list', len(stock_list))
 
     def get_us_index_substock_exist(self, id):
         '''
@@ -568,7 +568,7 @@ if __name__ == '__main__':
     #get_us_indexes_daily("纳斯达克综合指数", "2020-01-01", "2020-08-02")
     uid = UsIndexesDaily()
     #uid.update_us_three_indexes_daily_lastest()
-    uid.get_us_indexes_daily_substock()
+    #uid.get_us_indexes_daily_substock()
     #uid.get_us_plate_substock()
-    #uid.get_us_plate_other_substock()
-    #uid.get_us_plate_china_concept_stock()
+    uid.get_us_plate_other_substock()
+    uid.get_us_plate_china_concept_stock()
