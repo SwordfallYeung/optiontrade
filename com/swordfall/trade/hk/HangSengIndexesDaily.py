@@ -81,10 +81,11 @@ class HangSengIndexesDaily:
         self.get_hk_index_substock('https://jpmhkwarrants.com/zh_hk/ajax/sector_hsi_hsce/type/hsce_top/order/6/desc/1', 9, 'hk_guoqin_index_substock_list')
         self.get_hk_index_substock('https://jpmhkwarrants.com/zh_hk/ajax/custom_sector/order/4/desc/1', 10, 'hk_tech_index_substock_list')
 
-    def get_hk_plate_substock(self, url):
+    def get_hk_plate_substock(self):
         start_time = datetime.now()
         print("get_hk_plate_substock  start_time:", start_time)
 
+        url = 'https://jpmhkwarrants.com/zh_hk/ajax/sector_hot_rise_drop/type/hot'
         headers = {
             "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
 
@@ -180,4 +181,4 @@ if __name__ == '__main__':
     hsid.get_hk_hang_seng_index_daily("2020-08-19", "2020-08-28")
     #hsid.update_hk_hang_seng_index_daily_lastest()
     #hsid.get_hk_hang_seng_index_substock()
-    #hsid.get_hk_plate_substock('https://jpmhkwarrants.com/zh_hk/ajax/sector_hot_rise_drop/type/hot')
+    #hsid.get_hk_plate_substock()

@@ -106,7 +106,6 @@ class BaseTrend:
                 if status is 'down':
                     calculate_status['count'] = calculate_status['count'] + 1
 
-
         if close > 2:
             if calculate_status['status'] is 'up' and calculate_status['count'] >= 2 and calculate_status['count'] < 6:
                 return calculate_status
