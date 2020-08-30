@@ -118,10 +118,10 @@ class StockTrend(BaseTrend):
         self.hk_substock_trend(securities_finance_substock_exist_list)
         print("")
 
-        print("------ ETF/基金 -------")
-        etf_fund_substock_exist_list = self.get_stock_exist(22).split(",")
-        self.hk_substock_trend(etf_fund_substock_exist_list)
-        print("")
+        # print("------ ETF/基金 -------")
+        # etf_fund_substock_exist_list = self.get_stock_exist(22).split(",")
+        # self.hk_substock_trend(etf_fund_substock_exist_list)
+        # print("")
 
         print("------ 电信服务 -------")
         telecommunication_substock_exist_list = self.get_stock_exist(23).split(",")
@@ -136,6 +136,7 @@ class StockTrend(BaseTrend):
         print("------ 博彩 -------")
         betting_substock_exist_list = self.get_stock_exist(25).split(",")
         self.hk_substock_trend(betting_substock_exist_list)
+        print("")
 
         print("------ 石油化工 -------")
         petrochemical_substock_exist_list = self.get_stock_exist(26).split(",")

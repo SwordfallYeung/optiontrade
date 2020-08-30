@@ -91,10 +91,10 @@ class SchedulerJobs:
 
 if __name__ == '__main__':
     sj = SchedulerJobs()
-    #sj.add_hk_job_schedule()
-    #sj.add_us_job_schedule()
-    sj.add_hk_stock_up_job()
-    sj.add_us_stock_up_job()
+    sj.add_hk_job_schedule()
+    sj.add_us_job_schedule()
+    #sj.add_hk_stock_up_job()
+    #sj.add_us_stock_up_job()
 
     while True:
         schedule.run_pending()
