@@ -563,12 +563,14 @@ class UsIndexesDaily:
         self.us_stock_service.insert_or_update_us_stock_exist(id, us_stock_list_str, type, count)
 
 if __name__ == '__main__':
-    #get_us_indexes_daily("道琼斯指数","2020-01-01","2020-08-02")
-    #get_us_indexes_daily("标普500指数", "2020-01-01", "2020-08-02")
-    #get_us_indexes_daily("纳斯达克综合指数", "2020-01-01", "2020-08-02")
+
     uid = UsIndexesDaily()
+    uid.get_us_indexes_daily("道琼斯指数","2020-08-20","2020-08-28")
+    uid.get_us_indexes_daily("标普500指数", "2020-08-20","2020-08-28")
+    uid.get_us_indexes_daily("纳斯达克综合指数", "2020-08-20","2020-08-28")
+
     #uid.update_us_three_indexes_daily_lastest()
     #uid.get_us_indexes_daily_substock()
     #uid.get_us_plate_substock()
-    uid.get_us_plate_other_substock()
-    uid.get_us_plate_china_concept_stock()
+    #uid.get_us_plate_other_substock()
+    #uid.get_us_plate_china_concept_stock()

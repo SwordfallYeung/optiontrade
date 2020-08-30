@@ -58,7 +58,7 @@ class HangSengIndexesDaily:
 
         self.update_hk_index_substock_list_exist(id, substock_exist, type, len(data))
 
-    def get_hk_hang_seng_index_substock(self, url, id, type):
+    def get_hk_index_substock(self, url, id, type):
         start_time = datetime.now()
         print("get_hk_hang_seng_index_substock  start_time:", start_time)
 
@@ -75,6 +75,11 @@ class HangSengIndexesDaily:
         end_time = datetime.now()
         time = (end_time - start_time)
         print("get_hk_hang_seng_index_substock end_time:", end_time, "耗时:", time)
+
+    def get_hk_hang_seng_index_substock(self):
+        self.get_hk_index_substock('https://jpmhkwarrants.com/zh_hk/ajax/sector_hsi_hsce/type/hsi_top/order/6/desc/1', 5, 'hk_hangseng_index_substock_list')
+        self.get_hk_index_substock('https://jpmhkwarrants.com/zh_hk/ajax/sector_hsi_hsce/type/hsce_top/order/6/desc/1', 9, 'hk_guoqin_index_substock_list')
+        self.get_hk_index_substock('https://jpmhkwarrants.com/zh_hk/ajax/custom_sector/order/4/desc/1', 10, 'hk_tech_index_substock_list')
 
     def get_hk_plate_substock(self, url):
         start_time = datetime.now()
@@ -170,10 +175,9 @@ class HangSengIndexesDaily:
         self.hk_stock_service.insert_or_update_hk_stock_exist(id, hk_stock_list_str, type, count)
 
 if __name__ == '__main__':
-    #get_hk_hang_seng_index_daily("2020-08-02","2020-08-02")
+    #
     hsid = HangSengIndexesDaily()
+    hsid.get_hk_hang_seng_index_daily("2020-08-19", "2020-08-28")
     #hsid.update_hk_hang_seng_index_daily_lastest()
-    #hsid.get_hk_hang_seng_index_substock('https://jpmhkwarrants.com/zh_hk/ajax/sector_hsi_hsce/type/hsi_top/order/6/desc/1', 5, 'hk_hangseng_index_substock_list')
-    #hsid.get_hk_hang_seng_index_substock('https://jpmhkwarrants.com/zh_hk/ajax/sector_hsi_hsce/type/hsce_top/order/6/desc/1', 9, 'hk_guoqin_index_substock_list')
-    #hsid.get_hk_hang_seng_index_substock('https://jpmhkwarrants.com/zh_hk/ajax/custom_sector/order/4/desc/1', 10, 'hk_tech_index_substock_list')
-    hsid.get_hk_plate_substock('https://jpmhkwarrants.com/zh_hk/ajax/sector_hot_rise_drop/type/hot')
+    #hsid.get_hk_hang_seng_index_substock()
+    #hsid.get_hk_plate_substock('https://jpmhkwarrants.com/zh_hk/ajax/sector_hot_rise_drop/type/hot')
